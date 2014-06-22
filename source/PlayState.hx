@@ -1,5 +1,6 @@
 package;
 
+import flixel.FlxG;
 import flixel.FlxState;
 
 /**
@@ -25,5 +26,14 @@ class PlayState extends FlxState {
 	 */
     override public function update():Void {
         super.update();
+
+
+        _updateDebug();
+    }
+
+    private function _updateDebug():Void {
+        if(FlxG.keys.justPressed.ESCAPE) {
+            throw "Tarminate.";
+        }
     }
 }
