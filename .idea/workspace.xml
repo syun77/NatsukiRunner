@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list id="b23be74e-fb6e-4718-a6cc-7be1cd1893b8" name="Default" comment="" />
-    <list default="true" id="a48857b0-9412-45fb-b639-3a7511249752" name="NatsukiRunner-4 属性定数を追加" comment="fixed #4 属性定数を追加">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/Player.hx" afterPath="$PROJECT_DIR$/source/Player.hx" />
+    <list id="b23be74e-fb6e-4718-a6cc-7be1cd1893b8" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
+    <list default="true" id="1eb128a4-c807-4cff-aa33-1872d0a0560f" name="NatsukiRunner-5 属性チェンジを仮実装" comment="fixed #5 属性チェンジを仮実装" />
     <ignored path="MyProject.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -69,30 +68,6 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FavoritesManager">
     <favorites_list name="MyProject" />
-  </component>
-  <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="Attribute.hx" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/source/Attribute.hx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="225">
-              <caret line="8" column="1" selection-start-line="8" selection-start-column="1" selection-end-line="8" selection-end-column="1" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Player.hx" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/source/Player.hx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.67672414" vertical-offset="106" max-vertical-offset="810">
-              <caret line="28" column="30" selection-start-line="28" selection-start-column="30" selection-end-line="28" selection-end-column="30" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
   </component>
   <component name="FindManager">
     <FindUsagesManager>
@@ -159,30 +134,6 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="MyProject" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MyProject" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MyProject" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MyProject" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MyProject" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="source" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
@@ -390,7 +341,7 @@
     <task id="Default" summary="Default task">
       <changelist id="b23be74e-fb6e-4718-a6cc-7be1cd1893b8" name="Default" comment="" />
       <created>1378092715337</created>
-      <updated>1403478639743</updated>
+      <updated>1403488550217</updated>
       <workItem from="1378092719697" duration="57000" />
       <workItem from="1378092777558" duration="531000" />
       <workItem from="1378102502259" duration="247000" />
@@ -436,14 +387,25 @@
       <created>1403488092546</created>
       <updated>1403488092546</updated>
     </task>
-    <task active="true" id="NatsukiRunner-4" summary="属性定数を追加">
-      <changelist id="a48857b0-9412-45fb-b639-3a7511249752" name="NatsukiRunner-4 属性定数を追加" comment="fixed #4 属性定数を追加" />
+    <task id="NatsukiRunner-4" summary="属性定数を追加">
+      <changelist id="" name="NatsukiRunner-4 属性定数を追加" comment="fixed #4 属性定数を追加" />
       <created>1403455759000</created>
       <option name="issue" value="true" />
       <option name="type" value="BUG" />
-      <updated>1403488242818</updated>
+      <updated>1403488486811</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="fixed #4 属性定数を追加">
+      <created>1403488442347</created>
+      <updated>1403488442347</updated>
+    </task>
+    <task active="true" id="NatsukiRunner-5" summary="属性チェンジを仮実装">
+      <changelist id="1eb128a4-c807-4cff-aa33-1872d0a0560f" name="NatsukiRunner-5 属性チェンジを仮実装" comment="fixed #5 属性チェンジを仮実装" />
+      <created>1403455790000</created>
+      <option name="issue" value="true" />
+      <option name="type" value="BUG" />
+      <updated>1403488551256</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <option name="createBranch" value="false" />
     <servers>
       <GitHub shared="false" url="github.com">
@@ -515,7 +477,8 @@
     <MESSAGE value="fixed #2 プレイヤーの表示&#10;" />
     <MESSAGE value="プレイヤーを表示" />
     <MESSAGE value="fixed #3 マウスの位置のプレイヤーを移動させる" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed #3 マウスの位置のプレイヤーを移動させる" />
+    <MESSAGE value="fixed #4 属性定数を追加" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed #4 属性定数を追加" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -617,6 +580,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.44368133" vertical-offset="136" max-vertical-offset="1802">
           <caret line="27" column="34" selection-start-line="27" selection-start-column="34" selection-end-line="27" selection-end-column="34" />
+          <folding />
         </state>
       </provider>
     </entry>
