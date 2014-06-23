@@ -5,14 +5,16 @@ import flixel.FlxSprite;
 /**
  * 色変えアイテム
  **/
-class VersiColor extends FlxSprite {
+class Ring extends FlxSprite {
 
     // 属性
     private var _attr:Attribute;
 
     public function new() {
         super(-100, -100);
-        makeGraphic(16, 16, FlxColor.RED);
+        loadGraphic("assets/images/ring_blue.png", true);
+        animation.add("play", [0, 1], 6);
+        immovable = true;
         kill();
     }
 
@@ -28,10 +30,10 @@ class VersiColor extends FlxSprite {
         x = px;
         y = py;
         if(attr == Attribute.Red) {
-            makeGraphic(16, 16, FlxColor.RED);
+            loadGraphic("assets/images/ring_red.png", true);
         }
         else {
-            makeGraphic(16, 16, FlxColor.BLUE);
+            loadGraphic("assets/images/ring_blue.png", true);
         }
         _attr = attr;
     }

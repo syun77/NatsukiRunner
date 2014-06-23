@@ -28,6 +28,7 @@ class Player extends FlxSprite {
 
         animation.play("blue");
         _attr = Attribute.Blue;
+        immovable = true;
     }
 
     // 属性の取得
