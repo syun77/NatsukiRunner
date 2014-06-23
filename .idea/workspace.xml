@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list id="b23be74e-fb6e-4718-a6cc-7be1cd1893b8" name="Default" comment="" />
-    <list id="442d3d91-a13c-4bdf-a216-4b8af396637f" name="NatsukiRunner-1 プロジェクトを登録する" comment="fixed #1 プロジェクトの新規登録" />
-    <list default="true" id="1504a91e-b738-4b9e-81aa-acb62eb17979" name="NatsukiRunner-2 プレイヤーの表示" comment="fixed #2 プレイヤーの表示&#10;">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/PlayState.hx" afterPath="$PROJECT_DIR$/source/PlayState.hx" />
+    <list default="true" id="a48857b0-9412-45fb-b639-3a7511249752" name="NatsukiRunner-4 属性定数を追加" comment="fixed #4 属性定数を追加">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/Player.hx" afterPath="$PROJECT_DIR$/source/Player.hx" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="MyProject.iws" />
@@ -73,21 +72,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="PlayState.hx" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/source/PlayState.hx">
+      <file leaf-file-name="Attribute.hx" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/source/Attribute.hx">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.21306819" vertical-offset="0" max-vertical-offset="704">
-              <caret line="10" column="15" selection-start-line="10" selection-start-column="15" selection-end-line="10" selection-end-column="15" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="225">
+              <caret line="8" column="1" selection-start-line="8" selection-start-column="1" selection-end-line="8" selection-end-column="1" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Player.hx" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="Player.hx" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/source/Player.hx">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="45" max-vertical-offset="360">
-              <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.67672414" vertical-offset="106" max-vertical-offset="810">
+              <caret line="28" column="30" selection-start-line="28" selection-start-column="30" selection-end-line="28" selection-end-column="30" />
               <folding />
             </state>
           </provider>
@@ -115,8 +114,9 @@
         <option value="$PROJECT_DIR$/MyProject.iml" />
         <option value="$PROJECT_DIR$/source/MenuState.hx" />
         <option value="$PROJECT_DIR$/source/Main.hx" />
-        <option value="$PROJECT_DIR$/source/Player.hx" />
         <option value="$PROJECT_DIR$/source/PlayState.hx" />
+        <option value="$PROJECT_DIR$/source/Attribute.hx" />
+        <option value="$PROJECT_DIR$/source/Player.hx" />
       </list>
     </option>
   </component>
@@ -182,38 +182,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="source" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MyProject" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MyProject" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="assets" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MyProject" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="MyProject" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="assets" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="images" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -432,7 +400,7 @@
       <updated>1403478547764</updated>
     </task>
     <task id="NatsukiRunner-1" summary="プロジェクトを登録する">
-      <changelist id="442d3d91-a13c-4bdf-a216-4b8af396637f" name="NatsukiRunner-1 プロジェクトを登録する" comment="" />
+      <changelist id="" name="NatsukiRunner-1 プロジェクトを登録する" comment="" />
       <created>1403445651000</created>
       <option name="issue" value="true" />
       <option name="type" value="BUG" />
@@ -442,18 +410,40 @@
       <created>1403479054502</created>
       <updated>1403479054502</updated>
     </task>
-    <task active="true" id="NatsukiRunner-2" summary="プレイヤーの表示">
-      <changelist id="1504a91e-b738-4b9e-81aa-acb62eb17979" name="NatsukiRunner-2 プレイヤーの表示" comment="fixed #2 プレイヤーの表示" />
+    <task id="NatsukiRunner-2" summary="プレイヤーの表示">
+      <changelist id="" name="NatsukiRunner-2 プレイヤーの表示" comment="fixed #2 プレイヤーの表示" />
       <created>1403448558000</created>
       <option name="issue" value="true" />
       <option name="type" value="BUG" />
-      <updated>1403481531401</updated>
+      <updated>1403487616005</updated>
     </task>
     <task id="LOCAL-00003" summary="fixed #2 プレイヤーの表示&#10;">
       <created>1403481804088</created>
       <updated>1403481804088</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="プレイヤーを表示">
+      <created>1403487565591</created>
+      <updated>1403487565591</updated>
+    </task>
+    <task id="NatsukiRunner-3" summary="マウスの位置のプレイヤーを移動させる">
+      <changelist id="" name="NatsukiRunner-3 マウスの位置のプレイヤーを移動させる" comment="fixed #3 マウスの位置のプレイヤーを移動させる" />
+      <created>1403449570000</created>
+      <option name="issue" value="true" />
+      <option name="type" value="BUG" />
+      <updated>1403488241894</updated>
+    </task>
+    <task id="LOCAL-00005" summary="fixed #3 マウスの位置のプレイヤーを移動させる">
+      <created>1403488092546</created>
+      <updated>1403488092546</updated>
+    </task>
+    <task active="true" id="NatsukiRunner-4" summary="属性定数を追加">
+      <changelist id="a48857b0-9412-45fb-b639-3a7511249752" name="NatsukiRunner-4 属性定数を追加" comment="fixed #4 属性定数を追加" />
+      <created>1403455759000</created>
+      <option name="issue" value="true" />
+      <option name="type" value="BUG" />
+      <updated>1403488242818</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <option name="createBranch" value="false" />
     <servers>
       <GitHub shared="false" url="github.com">
@@ -478,7 +468,7 @@
     <frame x="0" y="22" width="1440" height="824" extended-state="6" />
     <editor active="false" />
     <layout>
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32833788" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32786885" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -523,7 +513,9 @@
     <MESSAGE value="新規登録" />
     <MESSAGE value="fixed #1 プロジェクトの新規登録" />
     <MESSAGE value="fixed #2 プレイヤーの表示&#10;" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed #2 プレイヤーの表示&#10;" />
+    <MESSAGE value="プレイヤーを表示" />
+    <MESSAGE value="fixed #3 マウスの位置のプレイヤーを移動させる" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed #3 マウスの位置のプレイヤーを移動させる" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -636,14 +628,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/source/Player.hx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="45" max-vertical-offset="360">
-          <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/source/Main.hx">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="1.0866477" vertical-offset="0" max-vertical-offset="1065">
@@ -654,8 +638,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/source/PlayState.hx">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.21306819" vertical-offset="0" max-vertical-offset="704">
-          <caret line="10" column="15" selection-start-line="10" selection-start-column="15" selection-end-line="10" selection-end-column="15" />
+        <state vertical-scroll-proportion="0.35560346" vertical-offset="0" max-vertical-offset="795">
+          <caret line="11" column="30" selection-start-line="11" selection-start-column="30" selection-end-line="11" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/Attribute.hx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="225">
+          <caret line="8" column="1" selection-start-line="8" selection-start-column="1" selection-end-line="8" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/Player.hx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.67672414" vertical-offset="106" max-vertical-offset="810">
+          <caret line="28" column="30" selection-start-line="28" selection-start-column="30" selection-end-line="28" selection-end-column="30" />
           <folding />
         </state>
       </provider>

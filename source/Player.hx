@@ -7,8 +7,12 @@ import flixel.FlxSprite;
  **/
 class Player extends FlxSprite {
 
+    // 定数
     private static inline var MOVE_DECAY = 0.9;
     private static inline var MOVE_REVISE = 5;
+
+    // 変数
+    private var _attr:Attribute; // 属性
 
     /**
      * 生成
@@ -22,6 +26,7 @@ class Player extends FlxSprite {
         animation.add("red", [1]);
 
         animation.play("blue");
+        _attr = Attribute.Blue;
     }
 
     /**
