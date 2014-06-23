@@ -13,7 +13,6 @@ class Ring extends FlxSprite {
     public function new() {
         super(-100, -100);
         loadGraphic("assets/images/ring_blue.png", true);
-        animation.add("play", [0, 1], 6);
         immovable = true;
         kill();
     }
@@ -35,6 +34,8 @@ class Ring extends FlxSprite {
         else {
             loadGraphic("assets/images/ring_blue.png", true);
         }
+        animation.add("play", [0, 1], 6);
+        animation.play("play");
         _attr = attr;
     }
 }

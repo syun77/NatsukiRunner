@@ -87,7 +87,6 @@ class PlayState extends FlxState {
             if(v != null) {
                 var px = FlxRandom.intRanged(0, FlxG.width);
                 var py = FlxRandom.intRanged(0, FlxG.height);
-                trace(px + "," + py);
                 if(FlxRandom.chanceRoll()) {
                     v.init(Attribute.Red, px, py);
                 }
