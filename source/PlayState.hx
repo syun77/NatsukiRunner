@@ -1,8 +1,9 @@
 package;
 
+import flixel.util.FlxRect;
+import flixel.FlxCamera;
 import flixel.FlxSprite;
 import flixel.util.FlxMath;
-import flixel.FlxObject;
 import flixel.util.FlxRandom;
 import flixel.util.FlxRandom;
 import flixel.group.FlxTypedGroup;
@@ -23,11 +24,13 @@ class PlayState extends FlxState {
 
     // ゲームオブジェクト
     private var _player:Player;
+    private var _follow:FlxSprite;
     private var _rings:FlxTypedGroup<Ring>;
 
     // 変数
     private var _state:State;
     private var _timer:Int;
+    private var _speed:Float;
 
     // デバッグ用
     private var _cntRing:Int;
@@ -39,8 +42,9 @@ class PlayState extends FlxState {
         super.create();
 
         // ゲームオブジェクト生成
-        _player = new Player(FlxG.width/2, FlxG.height/2);
+        _player = new Player(32, FlxG.height/2);
         add(_player);
+        _follow = new FlxSprite(_player.x+FlxG.width/2, _player.y);
 
         _rings = new FlxTypedGroup<Ring>(8);
         for(i in 0..._rings.maxSize) {
@@ -51,11 +55,21 @@ class PlayState extends FlxState {
         // 変数初期化
         _state = State.Main;
         _timer = 0;
+        _speed = 100;
 
         _cntRing = 0;
 
+        var width = 1280;
+        var height = FlxG.height;
+//        FlxG.camera.follow(_player, FlxCamera.STYLE_PLATFORMER);
+        FlxG.camera.follow(_follow, FlxCamera.STYLE_NO_DEAD_ZONE);
+        FlxG.camera.bounds = new FlxRect(0, 0, width, height);
+        FlxG.worldBounds.set(0, 0, width, height);
+
+
         FlxG.debugger.toggleKeys = ["ALT"];
-        FlxG.watch.add(this, "_cntVersiColor");
+        FlxG.watch.add(this, "_cntRing");
+        FlxG.watch.add(_player, "x");
     }
 
     /**
@@ -81,12 +95,19 @@ class PlayState extends FlxState {
      * 更新・メイン
      **/
     private function _updateMain():Void {
+
+        _player.velocity.x = _speed;
+        _follow.velocity.x = _speed;
+        _follow.x = _player.x + FlxG.width/2;
+
         _timer++;
         if(_timer%60 == 1) {
             var v:Ring = _rings.recycle();
             if(v != null) {
-                var px = FlxRandom.intRanged(0, FlxG.width);
-                var py = FlxRandom.intRanged(0, FlxG.height);
+                var px:Float = FlxRandom.intRanged(0, FlxG.width);
+                var py:Float = FlxRandom.intRanged(0, FlxG.height);
+                px += FlxG.camera.scroll.x;
+                py += FlxG.camera.scroll.y;
                 if(FlxRandom.chanceRoll()) {
                     v.init(Attribute.Red, px, py);
                 }
@@ -97,6 +118,7 @@ class PlayState extends FlxState {
         }
         // 当たり判定
         FlxG.overlap(_player, _rings, _vsPlayerVersiColor, _collideCircle);
+        //FlxG.collide(_player, _rings, _vsPlayerVersiColor);
     }
 
     // プレイヤー vs 色変えアイテム
@@ -114,6 +136,7 @@ class PlayState extends FlxState {
      * 円同士で当たり判定をする
      **/
     private function _collideCircle(spr1:FlxSprite, spr2:FlxSprite):Bool {
+
         var r1 = spr1.width;
         var r2 = spr2.width;
         var dist = FlxMath.distanceBetween(spr2, spr1);

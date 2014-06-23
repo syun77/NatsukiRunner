@@ -41,14 +41,14 @@ class Player extends FlxSprite {
         super.update();
 
         // マウスの座標に向かって移動する
-        var mx = FlxG.mouse.x;
-        var my = FlxG.mouse.y;
+        var p = FlxG.mouse.getWorldPosition();
 
-        var dx = mx - (x + width/2);
-        var dy = my - (y + height/2);
+        var dx = p.x - (x + width/2);
+        var dy = p.y - (y + height/2);
         dx *= MOVE_DECAY * MOVE_REVISE;
         dy *= MOVE_DECAY * MOVE_REVISE;
-        velocity.set(dx, dy);
+//        velocity.set(dx, dy);
+        velocity.y = dy;
     }
 
 
