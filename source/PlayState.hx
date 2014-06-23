@@ -27,6 +27,9 @@ class PlayState extends FlxState {
     private var _follow:FlxSprite;
     private var _rings:FlxTypedGroup<Ring>;
 
+    // HUD
+    private var _hud:HUD;
+
     // 変数
     private var _state:State;
     private var _timer:Int;
@@ -45,6 +48,8 @@ class PlayState extends FlxState {
         _player = new Player(32, FlxG.height/2);
         add(_player);
         _follow = new FlxSprite(_player.x+FlxG.width/2, _player.y);
+        _follow.visible = false;
+        add(_follow);
 
         _rings = new FlxTypedGroup<Ring>(8);
         for(i in 0..._rings.maxSize) {
@@ -55,18 +60,21 @@ class PlayState extends FlxState {
         // 変数初期化
         _state = State.Main;
         _timer = 0;
-        _speed = 100;
+        _speed = 10;
 
         _cntRing = 0;
 
-        var width = 1280;
+        var width = 1280*100;
         var height = FlxG.height;
-//        FlxG.camera.follow(_player, FlxCamera.STYLE_PLATFORMER);
         FlxG.camera.follow(_follow, FlxCamera.STYLE_NO_DEAD_ZONE);
         FlxG.camera.bounds = new FlxRect(0, 0, width, height);
         FlxG.worldBounds.set(0, 0, width, height);
 
+        // HUD
+        _hud = new HUD(_player);
+        add(_hud);
 
+        // デバッグ用
         FlxG.debugger.toggleKeys = ["ALT"];
         FlxG.watch.add(this, "_cntRing");
         FlxG.watch.add(_player, "x");
@@ -84,6 +92,7 @@ class PlayState extends FlxState {
 	 */
     override public function update():Void {
         super.update();
+        _hud.updateAll();
 
         switch(_state) {
         case State.Main: _updateMain();
