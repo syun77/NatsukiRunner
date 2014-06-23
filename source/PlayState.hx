@@ -33,5 +33,16 @@ class PlayState extends FlxState {
 	 */
     override public function update():Void {
         super.update();
+
+        _updateDebug();
+    }
+
+    /**
+     * 更新・デバッグ
+     **/
+    private function _updateDebug():Void {
+        if(FlxG.keys.justPressed.ESCAPE) {
+            throw "Terminate.";
+        }
     }
 }
