@@ -1,4 +1,5 @@
 package ;
+import haxe.xml.Check.Attrib;
 import flixel.FlxG;
 import flixel.FlxSprite;
 
@@ -29,6 +30,9 @@ class Player extends FlxSprite {
         _attr = Attribute.Blue;
     }
 
+    // 属性の取得
+    public function getAttribute():Attribute { return _attr; }
+
     /**
      * 更新
      **/
@@ -44,5 +48,32 @@ class Player extends FlxSprite {
         dx *= MOVE_DECAY * MOVE_REVISE;
         dy *= MOVE_DECAY * MOVE_REVISE;
         velocity.set(dx, dy);
+    }
+
+
+    /**
+     * 属性チェンジ
+     * @param 属性
+     **/
+    public function changeAttribute(attr:Attribute):Void {
+        _attr = attr;
+        var name:String = "blue";
+        if(_attr == Attribute.Red) {
+            name = "red";
+        }
+        animation.play(name);
+    }
+
+    /**
+     * 属性を反転させる
+     **/
+    public function reverseAttribute():Void {
+
+        if(_attr == Attribute.Blue) {
+            changeAttribute(Attribute.Red);
+        }
+        else {
+            changeAttribute(Attribute.Blue);
+        }
     }
 }

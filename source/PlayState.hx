@@ -44,5 +44,9 @@ class PlayState extends FlxState {
         if(FlxG.keys.justPressed.ESCAPE) {
             throw "Terminate.";
         }
+
+        if(FlxG.keys.justPressed.SPACE) {
+            _player.reverseAttribute();
+        }
     }
 }
