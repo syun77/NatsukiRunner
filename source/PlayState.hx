@@ -122,7 +122,7 @@ class PlayState extends FlxState {
 
         _player.velocity.x = _speed;
         _follow.velocity.x = _speed;
-        _follow.x = _player.x + FlxG.width/2;
+        _follow.x = _player.x + FlxG.width/2-64;
 
         // TODO: テスト用にリングアイテムを出現
         _timer++;

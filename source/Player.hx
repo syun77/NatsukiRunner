@@ -1,4 +1,5 @@
 package ;
+import flixel.addons.effects.FlxTrail;
 import haxe.xml.Check.Attrib;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -14,6 +15,8 @@ class Player extends FlxSprite {
 
     // 変数
     private var _attr:Attribute; // 属性
+    private var _trailBlue:FlxTrail; // ブラー
+    private var _trailRed:FlxTrail; // ブラー
 
     /**
      * 生成
@@ -26,9 +29,17 @@ class Player extends FlxSprite {
         animation.add("blue", [0]);
         animation.add("red", [1]);
 
-        animation.play("blue");
         _attr = Attribute.Blue;
         immovable = true;
+
+        animation.play("red");
+        _trailRed = new FlxTrail(this);
+        FlxG.state.add(_trailRed);
+        _trailRed.kill();
+
+        animation.play("blue");
+        _trailBlue = new FlxTrail(this);
+        FlxG.state.add(_trailBlue);
     }
 
     // 属性の取得
@@ -59,8 +70,14 @@ class Player extends FlxSprite {
     public function changeAttribute(attr:Attribute):Void {
         _attr = attr;
         var name:String = "blue";
+        _trailBlue.kill();
+        _trailRed.kill();
         if(_attr == Attribute.Red) {
             name = "red";
+            _trailRed.revive();
+        }
+        else {
+            _trailBlue.revive();
         }
         animation.play(name);
     }
