@@ -35,6 +35,9 @@ class PlayState extends FlxState {
     // HUD
     private var _hud:HUD;
 
+    // マップ
+    private var _map:TiledLevel;
+
     // 背景
     private var _back:FlxSprite;
     private var _back2:FlxSprite;
@@ -64,6 +67,9 @@ class PlayState extends FlxState {
         _back2.loadGraphic("assets/images/back.png");
         _back2.scrollFactor.set(0, 0);
         add(_back2);
+
+        // マップ読み込み
+        _map = new TiledLevel("assets/levels/001.tmx");
 
         // ゲームオブジェクト生成
         _player = new Player(32, FlxG.height/2);
