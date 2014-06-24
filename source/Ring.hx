@@ -38,4 +38,15 @@ class Ring extends FlxSprite {
         animation.play("play");
         _attr = attr;
     }
+
+    /**
+     * 更新
+     **/
+    override public function update():Void {
+
+        if(isOnScreen() == false) {
+            // 画面外に出たので消す
+            kill();
+        }
+    }
 }

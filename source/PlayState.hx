@@ -112,11 +112,12 @@ class PlayState extends FlxState {
         _follow.velocity.x = _speed;
         _follow.x = _player.x + FlxG.width/2;
 
+        // TODO: テスト用にリングアイテムを出現
         _timer++;
         if(_timer%60 == 1) {
             var v:Ring = _rings.recycle();
             if(v != null) {
-                var px:Float = FlxRandom.intRanged(0, FlxG.width);
+                var px:Float = FlxRandom.intRanged(cast FlxG.width/2, FlxG.width);
                 var py:Float = FlxRandom.intRanged(0, FlxG.height);
                 px += FlxG.camera.scroll.x;
                 py += FlxG.camera.scroll.y;
