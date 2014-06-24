@@ -22,6 +22,9 @@ private enum State {
  */
 class PlayState extends FlxState {
 
+    // 定数
+    private static inline var START_SPEED:Float = 100;
+
     // ゲームオブジェクト
     private var _player:Player;
     private var _follow:FlxSprite;
@@ -60,7 +63,7 @@ class PlayState extends FlxState {
         // 変数初期化
         _state = State.Main;
         _timer = 0;
-        _speed = 10;
+        _speed = START_SPEED;
 
         _cntRing = 0;
 
