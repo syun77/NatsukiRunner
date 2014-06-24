@@ -11,18 +11,23 @@ import flixel.group.FlxGroup;
  **/
 class HUD extends FlxGroup {
 
+    // 表示オブジェクト
     private var _txtSpeed:FlxText;
     private var _txtDistance:FlxText;
     private var _player:Player;
 
     private var _objs:Array<FlxObject>;
 
+    // ゴールまでの距離
+    private var _goal:Int;
+
     /**
      * コンストラクタ
      **/
-    public function new(p:Player) {
+    public function new(p:Player, goal:Int) {
         super();
         _player = p;
+        _goal = goal;
 
         _objs = new Array<FlxObject>();
 
@@ -49,6 +54,6 @@ class HUD extends FlxGroup {
     public function updateAll():Void {
 
         _txtSpeed.text = "Speed: " + _player.velocity.x;
-        _txtDistance.text = "Distance: 0";
+        _txtDistance.text = "Distance: " + Math.floor(_player.x/10) + "/" + Math.floor(_goal/10);
     }
 }

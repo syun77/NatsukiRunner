@@ -74,7 +74,7 @@ class PlayState extends FlxState {
         FlxG.worldBounds.set(0, 0, width, height);
 
         // HUD
-        _hud = new HUD(_player);
+        _hud = new HUD(_player, width);
         add(_hud);
 
         // デバッグ用
