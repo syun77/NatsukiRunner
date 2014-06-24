@@ -29,6 +29,7 @@ class PlayState extends FlxState {
     private var _player:Player;
     private var _follow:FlxSprite;
     private var _rings:FlxTypedGroup<Ring>;
+    private var _blocks:FlxTypedGroup<Block>;
 
     // HUD
     private var _hud:HUD;
@@ -40,6 +41,7 @@ class PlayState extends FlxState {
 
     // デバッグ用
     private var _cntRing:Int;
+    private var _cntBlock:Int;
 
     /**
 	 * 生成
@@ -54,11 +56,19 @@ class PlayState extends FlxState {
         _follow.visible = false;
         add(_follow);
 
+        // リング
         _rings = new FlxTypedGroup<Ring>(8);
         for(i in 0..._rings.maxSize) {
             _rings.add(new Ring());
         }
         add(_rings);
+
+        // ブロック
+        _blocks = new FlxTypedGroup<Block>(128);
+        for(i in 0..._blocks.maxSize) {
+            _blocks.add(new Block());
+        }
+        add(_blocks);
 
         // 変数初期化
         _state = State.Main;
@@ -66,6 +76,7 @@ class PlayState extends FlxState {
         _speed = START_SPEED;
 
         _cntRing = 0;
+        _cntBlock = 0;
 
         var width = 1280*100;
         var height = FlxG.height;
@@ -80,6 +91,7 @@ class PlayState extends FlxState {
         // デバッグ用
         FlxG.debugger.toggleKeys = ["ALT"];
         FlxG.watch.add(this, "_cntRing");
+        FlxG.watch.add(this, "_cntBlock");
         FlxG.watch.add(_player, "x");
     }
 
@@ -129,9 +141,26 @@ class PlayState extends FlxState {
                 }
             }
         }
+        // TODO: テスト用にブロックを配置
+        if(_timer%30 == 0) {
+            var b:Block = _blocks.recycle();
+            if(b != null) {
+                var px:Float = FlxG.width-8;
+                var py:Float = FlxRandom.intRanged(0, FlxG.height);
+                px += FlxG.camera.scroll.x;
+                py += FlxG.camera.scroll.y;
+                if(FlxRandom.chanceRoll()) {
+                    b.init(Attribute.Red, px, py);
+                }
+                else {
+                    b.init(Attribute.Blue, px, py);
+                }
+            }
+        }
+
         // 当たり判定
         FlxG.overlap(_player, _rings, _vsPlayerVersiColor, _collideCircle);
-        //FlxG.collide(_player, _rings, _vsPlayerVersiColor);
+        FlxG.collide(_player, _blocks, _vsPlayerBlock);
     }
 
     // プレイヤー vs 色変えアイテム
@@ -141,8 +170,20 @@ class PlayState extends FlxState {
             // 色変え実行
             p.changeAttribute(v.getAttribute());
         }
-        v.kill();
+        v.vanish();
 
+    }
+
+    // プレイヤー vs ブロック
+    private function _vsPlayerBlock(p:Player, b:Block):Void {
+
+        if(p.getAttribute() == b.getAttribute()) {
+            _speed += 10;
+        }
+        else {
+            _speed -= 10;
+        }
+        b.vanish();
     }
 
     /**
@@ -172,5 +213,6 @@ class PlayState extends FlxState {
         }
 
         _cntRing = _rings.countLiving();
+        _cntBlock = _blocks.countLiving();
     }
 }

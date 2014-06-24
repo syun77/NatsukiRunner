@@ -40,6 +40,13 @@ class Ring extends FlxSprite {
     }
 
     /**
+     * 消滅
+     **/
+    public function vanish():Void {
+        kill();
+    }
+
+    /**
      * 更新
      **/
     override public function update():Void {
