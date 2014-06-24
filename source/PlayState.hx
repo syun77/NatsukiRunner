@@ -1,5 +1,6 @@
 package;
 
+import flixel.util.FlxPoint;
 import Attribute;
 import Attribute;
 import haxe.xml.Check.Attrib;
@@ -24,8 +25,11 @@ private enum State {
 class PlayState extends FlxState {
 
     // 定数
-    private static inline var START_SPEED:Float = 100;
-    private static inline var SCROLL_SPEED:Float = 0.1;
+    private static inline var SPEED_START:Float = 50;
+    private static inline var BACK_SCROLL_SPEED:Float = 0.1;
+    private static inline var SPEED_ADD:Float = 1;
+    private static inline var SPEED_MISS:Float = 0.9;
+    private static inline var SPEED_ADD_DEFAULT:Float = 0.01;
 
     // ゲームオブジェクト
     private var _player:Player;
@@ -88,7 +92,7 @@ class PlayState extends FlxState {
         add(_rings);
 
         // ブロック
-        _blocks = new FlxTypedGroup<Block>(128);
+        _blocks = new FlxTypedGroup<Block>(512);
         for(i in 0..._blocks.maxSize) {
             _blocks.add(new Block());
         }
@@ -97,7 +101,7 @@ class PlayState extends FlxState {
         // 変数初期化
         _state = State.Main;
         _timer = 0;
-        _speed = START_SPEED;
+        _speed = SPEED_START;
 
         _cntRing = 0;
         _cntBlock = 0;
@@ -117,6 +121,7 @@ class PlayState extends FlxState {
         FlxG.watch.add(this, "_cntRing");
         FlxG.watch.add(this, "_cntBlock");
         FlxG.watch.add(_player, "x");
+        FlxG.watch.add(_player, "y");
     }
 
     /**
@@ -187,57 +192,26 @@ class PlayState extends FlxState {
      **/
     private function _updateMain():Void {
 
+        _speed += SPEED_ADD_DEFAULT;
+
         _player.velocity.x = _speed;
         _follow.velocity.x = _speed;
         _follow.x = _player.x + FlxG.width/2-64;
 
-        _scrollX -= SCROLL_SPEED;
+        _scrollX -= BACK_SCROLL_SPEED;
         if(_scrollX < -FlxG.width) {
             _scrollX += FlxG.width;
         }
         _back.x = _scrollX;
         _back2.x = _scrollX + FlxG.width;
 
+        // マップからオブジェクトを配置
         _putObjects();
-        /*
-        // TODO: テスト用にリングアイテムを出現
-        _timer++;
-        if(_timer%60 == 1) {
-            var v:Ring = _rings.recycle();
-            if(v != null) {
-                var px:Float = FlxRandom.intRanged(cast FlxG.width/2, FlxG.width);
-                var py:Float = FlxRandom.intRanged(0, FlxG.height);
-                px += FlxG.camera.scroll.x;
-                py += FlxG.camera.scroll.y;
-                if(FlxRandom.chanceRoll()) {
-                    v.init(Attribute.Red, px, py);
-                }
-                else {
-                    v.init(Attribute.Blue, px, py);
-                }
-            }
-        }
-        // TODO: テスト用にブロックを配置
-        if(_timer%30 == 0) {
-            var b:Block = _blocks.recycle();
-            if(b != null) {
-                var px:Float = FlxG.width-8;
-                var py:Float = FlxRandom.intRanged(0, FlxG.height);
-                px += FlxG.camera.scroll.x;
-                py += FlxG.camera.scroll.y;
-                if(FlxRandom.chanceRoll()) {
-                    b.init(Attribute.Red, px, py);
-                }
-                else {
-                    b.init(Attribute.Blue, px, py);
-                }
-            }
-        }
-        */
 
         // 当たり判定
         FlxG.overlap(_player, _rings, _vsPlayerVersiColor, _collideCircle);
-        FlxG.collide(_player, _blocks, _vsPlayerBlock);
+//        FlxG.collide(_player, _blocks, _vsPlayerBlock);
+        FlxG.overlap(_player, _blocks, _vsPlayerBlock, _collideCircleBlock);
     }
 
     // プレイヤー vs 色変えアイテム
@@ -255,10 +229,13 @@ class PlayState extends FlxState {
     private function _vsPlayerBlock(p:Player, b:Block):Void {
 
         if(p.getAttribute() == b.getAttribute()) {
-            _speed += 10;
+            _speed += 1;
         }
         else {
-            _speed -= 10;
+            _speed *= SPEED_MISS ;
+            if(_speed < SPEED_START) {
+                _speed = SPEED_START;
+            }
         }
         b.vanish();
     }
@@ -268,9 +245,36 @@ class PlayState extends FlxState {
      **/
     private function _collideCircle(spr1:FlxSprite, spr2:FlxSprite):Bool {
 
-        var r1 = spr1.width;
-        var r2 = spr2.width;
-        var dist = FlxMath.distanceBetween(spr2, spr1);
+        var r1 = spr1.width/2;
+        var r2 = spr2.width/2;
+        var px1 = spr1.x + r1;
+        var py1 = spr1.y + r1;
+        var px2 = spr2.x + r2;
+        var py2 = spr2.y + r2;
+        var p1 = FlxPoint.get(px1, py1);
+        var p2 = FlxPoint.get(px2, py2);
+        var dist = FlxMath.getDistance(p1, p2);
+        if(r1*r1 + r2*r2 >= dist*dist) {
+            return true;
+        }
+        return false;
+    }
+
+    private function _collideCircleBlock(p:Player, b:Block):Bool {
+
+        var r1 = p.width/2;
+        if(p.getAttribute() == b.getAttribute()) {
+            // 同じ属性なら大きめに取る
+            r1 = p.width * 0.6;
+        }
+        var r2 = b.width/2;
+        var px1 = p.x + r1;
+        var py1 = p.y + r1;
+        var px2 = b.x + r2;
+        var py2 = b.y + r2;
+        var p1 = FlxPoint.get(px1, py1);
+        var p2 = FlxPoint.get(px2, py2);
+        var dist = FlxMath.getDistance(p1, p2);
         if(r1*r1 + r2*r2 >= dist*dist) {
             return true;
         }

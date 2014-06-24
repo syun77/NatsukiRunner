@@ -1,4 +1,5 @@
 package ;
+import Math;
 import flixel.FlxObject;
 import flixel.FlxG;
 import flixel.util.FlxColor;
@@ -53,7 +54,7 @@ class HUD extends FlxGroup {
      **/
     public function updateAll():Void {
 
-        _txtSpeed.text = "Speed: " + _player.velocity.x;
+        _txtSpeed.text = "Speed: " + Math.floor(_player.velocity.x);
         _txtDistance.text = "Distance: " + Math.floor(_player.x/10) + "/" + Math.floor(_goal/10);
     }
 }
