@@ -24,6 +24,7 @@ class PlayState extends FlxState {
 
     // 定数
     private static inline var START_SPEED:Float = 100;
+    private static inline var SCROLL_SPEED:Float = 0.1;
 
     // ゲームオブジェクト
     private var _player:Player;
@@ -34,10 +35,15 @@ class PlayState extends FlxState {
     // HUD
     private var _hud:HUD;
 
+    // 背景
+    private var _back:FlxSprite;
+    private var _back2:FlxSprite;
+
     // 変数
     private var _state:State;
     private var _timer:Int;
     private var _speed:Float;
+    private var _scrollX:Float = 0;
 
     // デバッグ用
     private var _cntRing:Int;
@@ -48,6 +54,16 @@ class PlayState extends FlxState {
 	 */
     override public function create():Void {
         super.create();
+
+        // 背景
+        _back = new FlxSprite(0, 0);
+        _back.loadGraphic("assets/images/back.png");
+        _back.scrollFactor.set(0, 0);
+        add(_back);
+        _back2 = new FlxSprite(FlxG.width, 0);
+        _back2.loadGraphic("assets/images/back.png");
+        _back2.scrollFactor.set(0, 0);
+        add(_back2);
 
         // ゲームオブジェクト生成
         _player = new Player(32, FlxG.height/2);
@@ -123,6 +139,13 @@ class PlayState extends FlxState {
         _player.velocity.x = _speed;
         _follow.velocity.x = _speed;
         _follow.x = _player.x + FlxG.width/2-64;
+
+        _scrollX -= SCROLL_SPEED;
+        if(_scrollX < -FlxG.width) {
+            _scrollX += FlxG.width;
+        }
+        _back.x = _scrollX;
+        _back2.x = _scrollX + FlxG.width;
 
         // TODO: テスト用にリングアイテムを出現
         _timer++;
