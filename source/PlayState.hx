@@ -1,11 +1,12 @@
 package;
 
+import Attribute;
+import Attribute;
+import haxe.xml.Check.Attrib;
 import flixel.util.FlxRect;
 import flixel.FlxCamera;
 import flixel.FlxSprite;
 import flixel.util.FlxMath;
-import flixel.util.FlxRandom;
-import flixel.util.FlxRandom;
 import flixel.group.FlxTypedGroup;
 import flixel.FlxG;
 import flixel.FlxState;
@@ -36,7 +37,7 @@ class PlayState extends FlxState {
     private var _hud:HUD;
 
     // マップ
-    private var _map:TiledLevel;
+    private var _tmx:TmxLoader;
 
     // 背景
     private var _back:FlxSprite;
@@ -69,7 +70,8 @@ class PlayState extends FlxState {
         add(_back2);
 
         // マップ読み込み
-        _map = new TiledLevel("assets/levels/001.tmx");
+        _tmx = new TmxLoader();
+        _tmx.load("assets/levels/001.tmx");
 
         // ゲームオブジェクト生成
         _player = new Player(32, FlxG.height/2);
@@ -100,8 +102,8 @@ class PlayState extends FlxState {
         _cntRing = 0;
         _cntBlock = 0;
 
-        var width = 1280*100;
-        var height = FlxG.height;
+        var width = _tmx.width * _tmx.tileWidth;
+        var height = _tmx.height * _tmx.tileHeight;
         FlxG.camera.follow(_follow, FlxCamera.STYLE_NO_DEAD_ZONE);
         FlxG.camera.bounds = new FlxRect(0, 0, width, height);
         FlxG.worldBounds.set(0, 0, width, height);
@@ -138,6 +140,49 @@ class PlayState extends FlxState {
     }
 
     /**
+     * 現在の視界に対応するオブジェクトを配置する
+     **/
+    private function _putObjects():Void {
+
+        // ブロックの生成
+        var createBlock = function(i, j, type:Attribute) {
+            var x = i * _tmx.tileWidth;
+            var y = j * _tmx.tileHeight;
+            var b:Block = _blocks.recycle();
+            b.init(type, x, y);
+        }
+        // リングの生成
+        var createRing = function(i, j, type:Attribute) {
+            var x = i * _tmx.tileWidth - (32/2) - (_tmx.tileWidth/2);
+            var y = j * _tmx.tileHeight - (32/2) - (_tmx.tileHeight/2);
+            var r:Ring = _rings.recycle();
+            r.init(type, x, y);
+        }
+
+        var layer:Layer2D = _tmx.getLayer(0);
+        var px = Math.floor(FlxG.camera.scroll.x / _tmx.tileWidth);
+        var w = Math.floor(FlxG.width / _tmx.tileWidth);
+        for(j in 0..._tmx.height) {
+            for(i in px...(px+w)) {
+                switch(layer.get(i, j)) {
+                    case 1: // 青ブロック
+                        createBlock(i, j, Attribute.Blue);
+                        layer.set(i, j, 0);
+                    case 2: // 赤ブロック
+                        createBlock(i, j, Attribute.Red);
+                        layer.set(i, j, 0);
+                    case 3: // 青リング
+                        createRing(i, j, Attribute.Blue);
+                        layer.set(i, j, 0);
+                    case 4: // 赤リング
+                        createRing(i, j, Attribute.Red);
+                        layer.set(i, j, 0);
+                }
+            }
+        }
+    }
+
+    /**
      * 更新・メイン
      **/
     private function _updateMain():Void {
@@ -153,6 +198,8 @@ class PlayState extends FlxState {
         _back.x = _scrollX;
         _back2.x = _scrollX + FlxG.width;
 
+        _putObjects();
+        /*
         // TODO: テスト用にリングアイテムを出現
         _timer++;
         if(_timer%60 == 1) {
@@ -186,6 +233,7 @@ class PlayState extends FlxState {
                 }
             }
         }
+        */
 
         // 当たり判定
         FlxG.overlap(_player, _rings, _vsPlayerVersiColor, _collideCircle);
@@ -239,6 +287,10 @@ class PlayState extends FlxState {
 
         if(FlxG.keys.justPressed.SPACE) {
             _player.reverseAttribute();
+        }
+
+        if(FlxG.keys.justPressed.R) {
+            FlxG.resetState();
         }
 
         _cntRing = _rings.countLiving();
