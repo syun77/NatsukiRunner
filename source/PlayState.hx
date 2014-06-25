@@ -1,5 +1,6 @@
 package;
 
+import flixel.util.FlxAngle;
 import flixel.text.FlxText;
 import flixel.util.FlxPoint;
 import Attribute;
@@ -28,16 +29,18 @@ private enum State {
 class PlayState extends FlxState {
 
     // 定数
-    private static inline var SPEED_START:Float = 50;
-    private static inline var BACK_SCROLL_SPEED:Float = 0.1;
-    private static inline var SPEED_ADD:Float = 1;
-    private static inline var SPEED_MISS:Float = 0.9;
-    private static inline var SPEED_ADD_DEFAULT:Float = 0.01;
-    private static inline var SPEED_MAX:Float = 500;
+    private static inline var BACK_SCROLL_SPEED:Float = 0.1; // 背景スクロールの速さ
+    private static inline var SPEED_START:Float = 50; // 開始時の速さ
+    private static inline var SPEED_ADD:Float = 1; // ブロック衝突による速度の上昇
+    private static inline var SPEED_MISS:Float = 0.9; // 異なるブロック衝突による速度の低下
+    private static inline var SPEED_ADD_DEFAULT:Float = 0.3; // デフォルトでの速度上昇
+    private static inline var SPEED_DEFAULT_MAX:Float = 100; // デフォルトでの速度上昇制限
+    private static inline var SPEED_MAX:Float = 384; // 最大速度
 
     // タイマー
     private static inline var TIMER_STAGE_CLEAR_INIT = 30;
     private static inline var TIMER_CHANGE_WAIT = 100;
+    private static inline var TIMER_DAMAGE = 30;
 
     // ゲームオブジェクト
     private var _player:Player;
@@ -47,6 +50,8 @@ class PlayState extends FlxState {
 
     // エフェクト
     private var _eftPlayer:FlxSprite;
+    private var _emitterBlockBlue:EmitterBlockBlue;
+    private var _emitterBlockRed:EmitterBlockRed;
 
     // メッセージ
     private var _txtMessage:FlxText;
@@ -62,10 +67,11 @@ class PlayState extends FlxState {
     private var _back2:FlxSprite;
 
     // 変数
-    private var _state:State;
-    private var _timer:Int;
-    private var _speed:Float;
-    private var _scrollX:Float = 0;
+    private var _state:State; // 状態
+    private var _timer:Int; // 汎用タイマー
+    private var _speed:Float; // 速度
+    private var _scrollX:Float = 0; // スクロール
+    private var _tDamage:Int; // ダメージによるペナルティ時間
 
     // デバッグ用
     private var _cntRing:Int;
@@ -120,6 +126,12 @@ class PlayState extends FlxState {
         _eftPlayer.kill();
         add(_eftPlayer);
 
+        // パーティクル
+        _emitterBlockBlue = new EmitterBlockBlue();
+        _emitterBlockRed = new EmitterBlockRed();
+        add(_emitterBlockBlue);
+        add(_emitterBlockRed);
+
         // テキスト
         _txtMessage = new FlxText(0, FlxG.height/2-12, FlxG.width);
         _txtMessage.size = 24;
@@ -132,6 +144,7 @@ class PlayState extends FlxState {
         _state = State.Main;
         _timer = 0;
         _speed = SPEED_START;
+        _tDamage = 0;
 
         _cntRing = 0;
         _cntBlock = 0;
@@ -254,14 +267,29 @@ class PlayState extends FlxState {
      * 各種スクロール処理
      **/
     private function _updateScroll():Void {
-        // デフォルトのスクロール速度上昇
-        _speed += SPEED_ADD_DEFAULT;
+        if(_tDamage > 0) {
+            // ダメージペナルティ
+            _tDamage--;
+        }
+        else {
+            if(_speed < SPEED_DEFAULT_MAX) {
+                // デフォルトのスクロール速度上昇
+                _speed += SPEED_ADD_DEFAULT;
+            }
+        }
 
         // プレイヤーをスクロールする
         _player.velocity.x = _speed;
         _follow.velocity.x = _speed;
+
         // カメラがフォローするオブジェクトの位置を調整
-        _follow.x = _player.x + FlxG.width/2-64;
+        var diffSpeed = SPEED_MAX - _speed;
+        var dx:Float = 0;
+        if(diffSpeed > 0) {
+            diffSpeed = SPEED_MAX - diffSpeed;
+            dx = 64 * Math.cos(FlxAngle.TO_RAD * 90 * diffSpeed / SPEED_MAX);
+        }
+        _follow.x = _player.x + FlxG.width/2 - dx;
 
         // 背景をスクロールする
         _scrollX -= BACK_SCROLL_SPEED;
@@ -346,13 +374,22 @@ class PlayState extends FlxState {
     private function _vsPlayerBlock(p:Player, b:Block):Void {
 
         if(p.getAttribute() == b.getAttribute()) {
-            _speed += 1;
+            _speed += SPEED_ADD;
         }
         else {
+            // ペナルティ
             _speed *= SPEED_MISS ;
             if(_speed < SPEED_START) {
                 _speed = SPEED_START;
             }
+            _tDamage = TIMER_DAMAGE;
+        }
+
+        if(b.getAttribute() == Attribute.Red) {
+            _emitterBlockRed.explode(b.x, b.y);
+        }
+        else {
+            _emitterBlockBlue.explode(b.x, b.y);
         }
         b.vanish();
     }

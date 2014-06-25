@@ -41,15 +41,16 @@ class HUD extends FlxGroup {
 
         // テキスト
         var width = FlxG.width;
-        var x = 4;
-        var y = 4;
+        var x = FlxG.width - 112;
+        var y2 = 4;
+        var y1 = FlxG.height-16;
         var dy = 12;
-        _txtSpeed = new FlxText(x, y, width);
-        y += dy;
-        _barSpeed = new FlxBar(x, y-2, FlxBar.FILL_LEFT_TO_RIGHT, cast FlxG.width/3, 2);
-        _txtDistance = new FlxText(x, y, width);
-        y += dy;
-        _barDistance = new FlxBar(x, y-2, FlxBar.FILL_LEFT_TO_RIGHT, cast FlxG.width/3, 2);
+        _txtSpeed = new FlxText(x, y1, width);
+        y1 += dy;
+        _barSpeed = new FlxBar(x, y1-2, FlxBar.FILL_LEFT_TO_RIGHT, cast FlxG.width/3, 2);
+        _txtDistance = new FlxText(x, y2, width);
+        y2 += dy;
+        _barDistance = new FlxBar(x, y2-2, FlxBar.FILL_LEFT_TO_RIGHT, cast FlxG.width/3, 2);
         _objs.push(_barSpeed);
         _objs.push(_barDistance);
         _objs.push(_txtSpeed);
