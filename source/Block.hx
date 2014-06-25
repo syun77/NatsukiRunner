@@ -1,4 +1,5 @@
 package ;
+import flixel.FlxG;
 import flixel.util.FlxRandom;
 import flixel.util.FlxColor;
 import flixel.FlxSprite;
@@ -53,7 +54,7 @@ class Block extends FlxSprite {
 
         super.update();
 
-        if(isOnScreen() == false) {
+        if(x + width < FlxG.camera.scroll.x) {
             // 画面外に出た
             kill();
         }

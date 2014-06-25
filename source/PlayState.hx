@@ -167,6 +167,7 @@ class PlayState extends FlxState {
         var layer:Layer2D = _tmx.getLayer(0);
         var px = Math.floor(FlxG.camera.scroll.x / _tmx.tileWidth);
         var w = Math.floor(FlxG.width / _tmx.tileWidth);
+        w += 8; // 広めに取る
         for(j in 0..._tmx.height) {
             for(i in px...(px+w)) {
                 switch(layer.get(i, j)) {

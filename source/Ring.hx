@@ -1,4 +1,5 @@
 package ;
+import flixel.FlxG;
 import flixel.util.FlxColor;
 import flixel.FlxSprite;
 
@@ -53,7 +54,7 @@ class Ring extends FlxSprite {
 
         super.update();
 
-        if(isOnScreen() == false) {
+        if(x + width < FlxG.camera.scroll.x) {
             // 画面外に出たので消す
             kill();
         }
