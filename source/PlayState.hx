@@ -1,9 +1,9 @@
 package;
 
+import flixel.text.FlxText;
 import flixel.util.FlxPoint;
 import Attribute;
 import Attribute;
-import haxe.xml.Check.Attrib;
 import flixel.util.FlxRect;
 import flixel.FlxCamera;
 import flixel.FlxSprite;
@@ -16,7 +16,9 @@ import flixel.FlxState;
  * 状態
  **/
 private enum State {
-    Main;
+    Main;           // メイン
+    StageClearInit; // ステージクリア・初期化
+    StageClearMain; // ステージクリア・メイン
 }
 
 /**
@@ -31,11 +33,17 @@ class PlayState extends FlxState {
     private static inline var SPEED_MISS:Float = 0.9;
     private static inline var SPEED_ADD_DEFAULT:Float = 0.01;
 
+    // タイマー
+    private static inline var TIMER_STAGE_CLEAR_INIT = 30;
+
     // ゲームオブジェクト
     private var _player:Player;
     private var _follow:FlxSprite;
     private var _rings:FlxTypedGroup<Ring>;
     private var _blocks:FlxTypedGroup<Block>;
+
+    // メッセージ
+    private var _txtMessage:FlxText;
 
     // HUD
     private var _hud:HUD;
@@ -98,6 +106,14 @@ class PlayState extends FlxState {
         }
         add(_blocks);
 
+        // テキスト
+        _txtMessage = new FlxText(0, FlxG.height/2-12, FlxG.width);
+        _txtMessage.size = 24;
+        _txtMessage.alignment = "center";
+        _txtMessage.visible = false;
+        _txtMessage.scrollFactor.set(0, 0);
+        add(_txtMessage);
+
         // 変数初期化
         _state = State.Main;
         _timer = 0;
@@ -122,6 +138,11 @@ class PlayState extends FlxState {
         FlxG.watch.add(this, "_cntBlock");
         FlxG.watch.add(_player, "x");
         FlxG.watch.add(_player, "y");
+        FlxG.watch.add(FlxG.camera.scroll, "x");
+        FlxG.watch.add(this, "_state");
+        FlxG.watch.add(this, "_timer");
+
+//        _player.x = _tmx.width * _tmx.tileWidth - 1000;
     }
 
     /**
@@ -140,7 +161,11 @@ class PlayState extends FlxState {
 
         switch(_state) {
         case State.Main: _updateMain();
+        case State.StageClearInit: _updateStageClearInit();
+        case State.StageClearMain: _updateStageClearMain();
         }
+
+        // デバッグ処理
         _updateDebug();
     }
 
@@ -167,7 +192,7 @@ class PlayState extends FlxState {
         var layer:Layer2D = _tmx.getLayer(0);
         var px = Math.floor(FlxG.camera.scroll.x / _tmx.tileWidth);
         var w = Math.floor(FlxG.width / _tmx.tileWidth);
-        w += 8; // 広めに取る
+        w += 8; // 検索範囲を広めに取る
         for(j in 0..._tmx.height) {
             for(i in px...(px+w)) {
                 switch(layer.get(i, j)) {
@@ -189,30 +214,71 @@ class PlayState extends FlxState {
     }
 
     /**
-     * 更新・メイン
+     * 各種スクロール処理
      **/
-    private function _updateMain():Void {
-
+    private function _updateScroll():Void {
+        // デフォルトのスクロール速度上昇
         _speed += SPEED_ADD_DEFAULT;
 
+        // プレイヤーをスクロールする
         _player.velocity.x = _speed;
         _follow.velocity.x = _speed;
+        // カメラがフォローするオブジェクトの位置を調整
         _follow.x = _player.x + FlxG.width/2-64;
 
+        // 背景をスクロールする
         _scrollX -= BACK_SCROLL_SPEED;
         if(_scrollX < -FlxG.width) {
+            // 折り返す
             _scrollX += FlxG.width;
         }
         _back.x = _scrollX;
         _back2.x = _scrollX + FlxG.width;
+
+    }
+
+    /**
+     * 更新・メイン
+     **/
+    private function _updateMain():Void {
+
+        // スクロール処理
+        _updateScroll();
+
+        // クリア判定
+        if(FlxG.camera.scroll.x >= _tmx.width * _tmx.tileWidth - FlxG.width) {
+            // クリア
+            _state = State.StageClearInit;
+            _timer = TIMER_STAGE_CLEAR_INIT;
+            _txtMessage.text = "Stage Clear!";
+            _txtMessage.visible = true;
+            return;
+        }
 
         // マップからオブジェクトを配置
         _putObjects();
 
         // 当たり判定
         FlxG.overlap(_player, _rings, _vsPlayerVersiColor, _collideCircle);
-//        FlxG.collide(_player, _blocks, _vsPlayerBlock);
         FlxG.overlap(_player, _blocks, _vsPlayerBlock, _collideCircleBlock);
+    }
+
+    /**
+     * ステージクリア
+     **/
+    private function _updateStageClearInit():Void {
+        _timer--;
+        if(_timer < 1) {
+            _state = State.StageClearMain;
+        }
+    }
+    private function _updateStageClearMain():Void {
+        if(_player.x > _tmx.width * _tmx.tileWidth) {
+            _player.active = false;
+        }
+        if(FlxG.mouse.justPressed) {
+            FlxG.resetState();
+        }
     }
 
     // プレイヤー vs 色変えアイテム
@@ -261,6 +327,9 @@ class PlayState extends FlxState {
         return false;
     }
 
+    /**
+     * プレイヤーとブロックの当たり判定
+     **/
     private function _collideCircleBlock(p:Player, b:Block):Bool {
 
         var r1 = p.width/2;
@@ -296,6 +365,16 @@ class PlayState extends FlxState {
 
         if(FlxG.keys.justPressed.R) {
             FlxG.resetState();
+        }
+
+        if(FlxG.keys.pressed.RIGHT) {
+            _speed += 10;
+        }
+        if(FlxG.keys.pressed.LEFT) {
+            _speed -= 10;
+            if(_speed < SPEED_START) {
+                _speed = SPEED_START;
+            }
         }
 
         _cntRing = _rings.countLiving();
