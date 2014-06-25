@@ -32,6 +32,7 @@ class PlayState extends FlxState {
     private static inline var SPEED_ADD:Float = 1;
     private static inline var SPEED_MISS:Float = 0.9;
     private static inline var SPEED_ADD_DEFAULT:Float = 0.01;
+    private static inline var SPEED_MAX:Float = 500;
 
     // タイマー
     private static inline var TIMER_STAGE_CLEAR_INIT = 30;
@@ -129,7 +130,7 @@ class PlayState extends FlxState {
         FlxG.worldBounds.set(0, 0, width, height);
 
         // HUD
-        _hud = new HUD(_player, width);
+        _hud = new HUD(_player, width, SPEED_MAX);
         add(_hud);
 
         // デバッグ用
