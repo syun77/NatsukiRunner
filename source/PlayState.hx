@@ -17,6 +17,7 @@ import flixel.FlxState;
  **/
 private enum State {
     Main;           // メイン
+    ChangeWait;     // 色変え演出中
     StageClearInit; // ステージクリア・初期化
     StageClearMain; // ステージクリア・メイン
 }
@@ -36,12 +37,16 @@ class PlayState extends FlxState {
 
     // タイマー
     private static inline var TIMER_STAGE_CLEAR_INIT = 30;
+    private static inline var TIMER_CHANGE_WAIT = 100;
 
     // ゲームオブジェクト
     private var _player:Player;
     private var _follow:FlxSprite;
     private var _rings:FlxTypedGroup<Ring>;
     private var _blocks:FlxTypedGroup<Block>;
+
+    // エフェクト
+    private var _eftPlayer:FlxSprite;
 
     // メッセージ
     private var _txtMessage:FlxText;
@@ -107,6 +112,14 @@ class PlayState extends FlxState {
         }
         add(_blocks);
 
+        // エフェクト
+        _eftPlayer = new FlxSprite();
+        _eftPlayer.loadGraphic("assets/images/player.png", true);
+        _eftPlayer.animation.add("blue", [0]);
+        _eftPlayer.animation.add("red", [1]);
+        _eftPlayer.kill();
+        add(_eftPlayer);
+
         // テキスト
         _txtMessage = new FlxText(0, FlxG.height/2-12, FlxG.width);
         _txtMessage.size = 24;
@@ -161,13 +174,36 @@ class PlayState extends FlxState {
         _hud.updateAll();
 
         switch(_state) {
-        case State.Main: _updateMain();
-        case State.StageClearInit: _updateStageClearInit();
-        case State.StageClearMain: _updateStageClearMain();
+            case State.Main: _updateMain();
+            case State.ChangeWait: _updateChangeWait();
+            case State.StageClearInit: _updateStageClearInit();
+            case State.StageClearMain: _updateStageClearMain();
         }
 
         // デバッグ処理
         _updateDebug();
+    }
+
+    private function _setActiveAll(b:Bool):Void {
+        _follow.active = b;
+        _player.active = b;
+        _blocks.active = b;
+        _rings.active = b;
+    }
+
+    /**
+     * 色変えエフェクト再生開始
+     **/
+    private function _startChangeWait():Void {
+        _state = State.ChangeWait;
+        _timer = TIMER_CHANGE_WAIT;
+        _eftPlayer.revive();
+        _eftPlayer.x = _player.x;
+        _eftPlayer.y = _player.y;
+        _eftPlayer.alpha = 1;
+        _eftPlayer.scale.set(1, 1);
+
+        _setActiveAll(false);
     }
 
     /**
@@ -260,10 +296,21 @@ class PlayState extends FlxState {
         _putObjects();
 
         // 当たり判定
-        FlxG.overlap(_player, _rings, _vsPlayerVersiColor, _collideCircle);
+        FlxG.overlap(_player, _rings, _vsPlayerRing, _collideCircle);
         FlxG.overlap(_player, _blocks, _vsPlayerBlock, _collideCircleBlock);
     }
 
+    private function _updateChangeWait():Void {
+        _timer = cast(_timer * 0.9);
+        _eftPlayer.alpha = 1.0 * _timer / TIMER_CHANGE_WAIT;
+        var sc:Float = 1.0 + 2.0 * (TIMER_CHANGE_WAIT - _timer) / TIMER_CHANGE_WAIT;
+        _eftPlayer.scale.set(sc, sc);
+        if(_timer < 1) {
+            _setActiveAll(true);
+            _eftPlayer.kill();
+            _state = State.Main;
+        }
+    }
     /**
      * ステージクリア
      **/
@@ -283,13 +330,15 @@ class PlayState extends FlxState {
     }
 
     // プレイヤー vs 色変えアイテム
-    private function _vsPlayerVersiColor(p:Player, v:Ring):Void {
+    private function _vsPlayerRing(p:Player, v:Ring):Void {
 
         if(p.getAttribute() != v.getAttribute()) {
             // 色変え実行
             p.changeAttribute(v.getAttribute());
         }
         v.vanish();
+
+        _startChangeWait();
 
     }
 
