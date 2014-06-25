@@ -51,6 +51,8 @@ class Ring extends FlxSprite {
      **/
     override public function update():Void {
 
+        super.update();
+
         if(isOnScreen() == false) {
             // 画面外に出たので消す
             kill();

@@ -1,4 +1,5 @@
 package ;
+import flixel.util.FlxRandom;
 import flixel.util.FlxColor;
 import flixel.FlxSprite;
 
@@ -29,11 +30,13 @@ class Block extends FlxSprite {
         _attr = attr;
         var size = 8;
         if(attr == Attribute.Blue) {
-            makeGraphic(size, size, FlxColor.BLUE);
+            loadGraphic("assets/images/block_blue.png", true);
         }
         else {
-            makeGraphic(size, size, FlxColor.RED);
+            loadGraphic("assets/images/block_red.png", true);
         }
+        animation.add("play", [0, 1], FlxRandom.intRanged(3, 6));
+        animation.play("play");
     }
 
     /**
@@ -47,6 +50,8 @@ class Block extends FlxSprite {
      * 更新
      **/
     override public function update():Void {
+
+        super.update();
 
         if(isOnScreen() == false) {
             // 画面外に出た
