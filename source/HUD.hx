@@ -18,6 +18,8 @@ class HUD extends FlxGroup {
     private var _txtDistance:FlxText;
     private var _txtLevel:FlxText;
     private var _player:Player;
+    private var _txtCombo:FlxText;
+    private var _txtCombo2:FlxText;
 
     // ゲージ
     private var _barSpeed:FlxBar;
@@ -55,16 +57,39 @@ class HUD extends FlxGroup {
         _txtLevel = new FlxText(-8, y2, width);
         _txtLevel.text = Reg.getLevelName();
         _txtLevel.alignment = "right";
+        _txtCombo = new FlxText(4, 4, 64);
+        _txtCombo2 = new FlxText(4, 30, 80);
+        _txtCombo2.text = "combo";
+        _txtCombo2.visible = false;
+
         _objs.push(_barSpeed);
         _objs.push(_barDistance);
         _objs.push(_txtSpeed);
         _objs.push(_txtDistance);
         _objs.push(_txtLevel);
+        _objs.push(_txtCombo);
+        _objs.push(_txtCombo2);
 
         for(o in _objs) {
             // スクロール無効
             o.scrollFactor.set(0, 0);
             add(o);
+        }
+    }
+
+    /**
+     * コンボ数の設定
+     **/
+    public function setCombo(v:Int):Void {
+        if(v == 0) {
+            _txtCombo.visible = false;
+            _txtCombo2.visible = false;
+        }
+        else {
+            _txtCombo.visible = true;
+            _txtCombo.text = "" + v;
+            _txtCombo.size = 24;
+            _txtCombo2.visible = true;
         }
     }
 
@@ -77,5 +102,9 @@ class HUD extends FlxGroup {
 
         _barSpeed.percent = 100*_player.velocity.x / _speedMax;
         _barDistance.percent = 100*_player.x / _goal;
+
+        if(_txtCombo.size > 16) {
+            _txtCombo.size--;
+        }
     }
 }

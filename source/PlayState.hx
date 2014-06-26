@@ -75,10 +75,11 @@ class PlayState extends FlxState {
 
     // 変数
     private var _state:State; // 状態
-    private var _timer:Int; // 汎用タイマー
+    private var _timer:Int;   // 汎用タイマー
     private var _speed:Float; // 速度
     private var _scrollX:Float = 0; // スクロール
-    private var _tDamage:Int; // ダメージによるペナルティ時間
+    private var _tDamage:Int   = 0; // ダメージによるペナルティ時間
+    private var _combo:Int     = 0; // コンボ数
 
     // デバッグ用
     private var _cntRing:Int;
@@ -156,7 +157,6 @@ class PlayState extends FlxState {
         _state = State.Main;
         _timer = 0;
         _speed = SPEED_START;
-        _tDamage = 0;
 
         _cntRing = 0;
         _cntBlock = 0;
@@ -181,8 +181,22 @@ class PlayState extends FlxState {
         FlxG.watch.add(FlxG.camera.scroll, "x");
         FlxG.watch.add(this, "_state");
         FlxG.watch.add(this, "_timer");
+    }
 
-//        _player.x = _tmx.width * _tmx.tileWidth - 1000;
+    /**
+     * コンポ数を増やす
+     **/
+    private function _addCombo():Void {
+        _combo++;
+        _hud.setCombo(_combo);
+    }
+
+    /**
+     * コンボ数をリセット
+     **/
+    private function _resetCombo():Void {
+        _combo = 0;
+        _hud.setCombo(_combo);
     }
 
     /**
@@ -434,6 +448,8 @@ class PlayState extends FlxState {
             _speed += SPEED_ADD;
             // HP回復
             _player.addHp();
+            // コンボ数アップ
+            _addCombo();
         }
         else {
             // ペナルティ
@@ -445,6 +461,8 @@ class PlayState extends FlxState {
 
             // ダメージ処理
             _player.damage();
+            // コンボ終了
+            _resetCombo();
         }
 
         if(b.getAttribute() == Attribute.Red) {
