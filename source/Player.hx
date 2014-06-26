@@ -1,4 +1,5 @@
 package ;
+import flixel.ui.FlxBar;
 import flixel.addons.effects.FlxTrail;
 import haxe.xml.Check.Attrib;
 import flixel.FlxG;
@@ -12,11 +13,18 @@ class Player extends FlxSprite {
     // 定数
     private static inline var MOVE_DECAY = 0.9;
     private static inline var MOVE_REVISE = 5;
+    private static inline var HP_MAX = 100;
+    private static inline var TIMER_DAMAGE = 30;
+    private static inline var DAMAGE_INIT = 40; // 初期ダメージ
+    private static inline var DAMAGE_VAL = 2; // 連続ダメージ
 
     // 変数
     private var _attr:Attribute; // 属性
-    private var _trailBlue:FlxTrail; // ブラー
-    private var _trailRed:FlxTrail; // ブラー
+    private var _trailBlue:FlxTrail; // ブラー(青)
+    private var _trailRed:FlxTrail; // ブラー(赤)
+    private var _hp:Float; // 体力
+    private var _tDamage:Int; // ダメージタイマー
+    private var _barHp:FlxBar; // 体力バー
 
     /**
      * 生成
@@ -40,10 +48,19 @@ class Player extends FlxSprite {
         animation.play("blue");
         _trailBlue = new FlxTrail(this);
         FlxG.state.add(_trailBlue);
+
+        _hp = HP_MAX;
+        _tDamage = 0;
     }
 
     // 属性の取得
     public function getAttribute():Attribute { return _attr; }
+    // HPの割合の取得
+    public function getHpRatio():Float { return 1.0 * _hp / HP_MAX; }
+    // 死亡しているかどうか
+    public function isDead():Bool { return _hp <= 0; }
+    // HPバー
+    public function setHpBar(bar:FlxBar) { _barHp = bar; }
 
     /**
      * 更新
@@ -60,6 +77,39 @@ class Player extends FlxSprite {
         dy *= MOVE_DECAY * MOVE_REVISE;
 //        velocity.set(dx, dy);
         velocity.y = dy;
+
+        if(_tDamage > 0) {
+            _tDamage--;
+        }
+
+        // 体力バーの更新
+        if(_hp == HP_MAX) {
+            _barHp.visible = false;
+        }
+        else {
+            _barHp.visible = true;
+            _barHp.percent = getHpRatio() * 100;
+            _barHp.x = x;
+            _barHp.y = y + 24;
+        }
+    }
+
+    /**
+     * ダメージ処理
+     * @param v ダメージ量
+     **/
+    public function damage(v:Int=DAMAGE_INIT):Void {
+
+        if(_tDamage > 0) {
+            // 連続ダメージなので少なめ
+            _hp -= DAMAGE_VAL;
+        }
+        else {
+            // 初期ダメージ
+            _hp -= v;
+            _tDamage = TIMER_DAMAGE;
+        }
+        _hp = if(_hp < 0) 0 else _hp;
     }
 
 

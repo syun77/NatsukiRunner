@@ -1,5 +1,7 @@
 package;
 
+import flixel.ui.FlxBar;
+import flixel.addons.display.FlxBackdrop;
 import flixel.util.FlxAngle;
 import flixel.text.FlxText;
 import flixel.util.FlxPoint;
@@ -44,6 +46,7 @@ class PlayState extends FlxState {
 
     // ゲームオブジェクト
     private var _player:Player;
+    private var _barHp:FlxBar;
     private var _follow:FlxSprite;
     private var _rings:FlxTypedGroup<Ring>;
     private var _blocks:FlxTypedGroup<Block>;
@@ -103,6 +106,10 @@ class PlayState extends FlxState {
         _follow = new FlxSprite(_player.x+FlxG.width/2, _player.y);
         _follow.visible = false;
         add(_follow);
+        _barHp = new FlxBar(0, 0, FlxBar.FILL_LEFT_TO_RIGHT, 32, 2);
+        _barHp.visible = false;
+        add(_barHp);
+        _player.setHpBar(_barHp);
 
         // リング
         _rings = new FlxTypedGroup<Ring>(8);
@@ -165,6 +172,7 @@ class PlayState extends FlxState {
         FlxG.watch.add(this, "_cntBlock");
         FlxG.watch.add(_player, "x");
         FlxG.watch.add(_player, "y");
+        FlxG.watch.add(_player, "_hp");
         FlxG.watch.add(FlxG.camera.scroll, "x");
         FlxG.watch.add(this, "_state");
         FlxG.watch.add(this, "_timer");
@@ -383,6 +391,9 @@ class PlayState extends FlxState {
                 _speed = SPEED_START;
             }
             _tDamage = TIMER_DAMAGE;
+
+            // ダメージ処理
+            _player.damage();
         }
 
         if(b.getAttribute() == Attribute.Red) {
