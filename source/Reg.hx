@@ -7,9 +7,21 @@ package;
  */
 class Reg {
     // レベル
-	public static var level:Int = 0;
+	public static var level:Int = 1;
     // スコア
 	public static var score:Int = 0;
     // ハイスコア
     public static var hiscore:Int = 0;
+
+    /**
+     * 難易度に対応する名前を取得する
+     **/
+    public static function getLevelName():String {
+        switch(level) {
+            case 1: return "Easy";
+            case 2: return "Normal";
+            case 3: return "Hard";
+            default: return "None";
+        }
+    }
 }

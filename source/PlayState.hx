@@ -102,7 +102,8 @@ class PlayState extends FlxState {
 
         // マップ読み込み
         _tmx = new TmxLoader();
-        _tmx.load("assets/levels/001.tmx");
+        var fTmx = "assets/levels/" + TextUtil.fillZero(Reg.level, 3) + ".tmx";
+        _tmx.load(fTmx);
 
         // ゲームオブジェクト生成
         _player = new Player(32, FlxG.height/2);
@@ -353,8 +354,8 @@ class PlayState extends FlxState {
             _timer = TIMER_GAMEOVER_INIT;
             // 画面を1秒間、白フラッシュします
             FlxG.camera.flash(0xffFFFFFF, 1);
-            // 画面を2%の揺れ幅で0.35秒間、揺らします
-            FlxG.camera.shake(0.02, 0.35);
+            // 画面を5%の揺れ幅で0.35秒間、揺らします
+            FlxG.camera.shake(0.05, 0.35);
             _txtMessage.text = "Game Over...";
             _txtMessage.visible = true;
             return;
@@ -393,8 +394,7 @@ class PlayState extends FlxState {
             _player.active = false;
         }
         if(FlxG.mouse.justPressed) {
-            // TODO: タイトル画面へ戻る
-            FlxG.resetState();
+            FlxG.switchState(new MenuState());
         }
     }
 
@@ -409,8 +409,7 @@ class PlayState extends FlxState {
     }
     private function _updateGameoverMain():Void {
         if(FlxG.mouse.justPressed) {
-            // TODO: タイトル画面へ戻る
-            FlxG.resetState();
+            FlxG.switchState(new MenuState());
         }
     }
 

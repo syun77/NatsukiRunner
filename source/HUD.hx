@@ -16,6 +16,7 @@ class HUD extends FlxGroup {
     // 表示オブジェクト
     private var _txtSpeed:FlxText;
     private var _txtDistance:FlxText;
+    private var _txtLevel:FlxText;
     private var _player:Player;
 
     // ゲージ
@@ -51,10 +52,14 @@ class HUD extends FlxGroup {
         _txtDistance = new FlxText(x, y2, width);
         y2 += dy;
         _barDistance = new FlxBar(x, y2-2, FlxBar.FILL_LEFT_TO_RIGHT, cast FlxG.width/3, 2);
+        _txtLevel = new FlxText(-8, y2, width);
+        _txtLevel.text = Reg.getLevelName();
+        _txtLevel.alignment = "right";
         _objs.push(_barSpeed);
         _objs.push(_barDistance);
         _objs.push(_txtSpeed);
         _objs.push(_txtDistance);
+        _objs.push(_txtLevel);
 
         for(o in _objs) {
             // スクロール無効

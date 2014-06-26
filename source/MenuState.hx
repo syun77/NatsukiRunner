@@ -103,9 +103,9 @@ class MenuState extends FlxState {
                 FlxG.switchState(new PlayState());
         }
 
-        if(FlxG.keys.justPressed.R) {
-            FlxG.resetState();
-        }
+//        if(FlxG.keys.justPressed.R) {
+//            FlxG.resetState();
+//        }
     }
 
     // ボタンを押した
