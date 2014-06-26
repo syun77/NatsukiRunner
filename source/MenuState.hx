@@ -1,9 +1,17 @@
 package;
 
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
+import flixel.ui.FlxButton;
 import flixel.FlxG;
 import flixel.text.FlxText;
 import flixel.FlxState;
 
+private enum State {
+    Main; // メイン
+    Select; // ボタン選択中
+    Decide; // ボタンを選択した
+}
 /**
  * タイトル画面
  */
@@ -11,16 +19,21 @@ class MenuState extends FlxState {
 
     private var _txtPress:FlxText;
     private var _timer:Int = 0;
+    private var _state:State = State.Main;
+    private var _bDecide:Bool = false;
+    private var _btnList:Array<FlxButton>;
     /**
 	 * 生成
 	 */
     override public function create():Void {
         super.create();
+
+        // テキスト
         var _txtTitle = new FlxText(0, 64, FlxG.width);
         _txtTitle.size = 24;
         _txtTitle.alignment = "center";
         _txtTitle.text = "Natsuki Runner";
-        _txtPress = new FlxText(0, FlxG.height/2+24, FlxG.width);
+        _txtPress = new FlxText(0, FlxG.height/2+36, FlxG.width);
         _txtPress.size = 16;
         _txtPress.alignment = "center";
         _txtPress.text = "click to start";
@@ -31,6 +44,25 @@ class MenuState extends FlxState {
         add(_txtTitle);
         add(_txtPress);
         add(_txtCopy);
+
+        // ボタン
+        _btnList = new Array<FlxButton>();
+        var x = FlxG.width/2-40;
+        var y = FlxG.height/2+24;
+        var dy = 24;
+        var _btn1 = new FlxButton( x, y, "EASY", _btnEasy);
+        y += dy;
+        var _btn2 = new FlxButton( x, y, "NORMAL", _btnNormal);
+        y += dy;
+        var _btn3 = new FlxButton( x, y, "HARD", _btnHard);
+        _btnList.push(_btn1);
+        _btnList.push(_btn2);
+        _btnList.push(_btn3);
+
+        for(btn in _btnList) {
+            add(btn);
+            btn.visible = false;
+        }
     }
 
     /**
@@ -46,11 +78,47 @@ class MenuState extends FlxState {
     override public function update():Void {
         super.update();
 
-        _timer++;
-        _txtPress.visible = _timer%64 < 48;
+        switch(_state) {
+            case State.Main:
+                _timer++;
+                _txtPress.visible = _timer%64 < 48;
+                if(FlxG.mouse.justReleased) {
+                    _txtPress.text = "Please select level.";
+                    FlxTween.tween(_txtPress, {y:FlxG.height/2}, 1, {ease:FlxEase.expoOut});
+                    for(btn in _btnList) {
+                        btn.visible = true;
+                    }
+                    _state = State.Select;
+                }
 
-        if(FlxG.mouse.justPressed) {
-            FlxG.switchState(new PlayState());
+            case State.Select:
+                // 決定待ち
+                _timer++;
+                _txtPress.visible = _timer%64 < 48;
+                if(_bDecide) {
+                    _state = State.Decide;
+                }
+
+            case State.Decide:
+                FlxG.switchState(new PlayState());
         }
+
+        if(FlxG.keys.justPressed.R) {
+            FlxG.resetState();
+        }
+    }
+
+    // ボタンを押した
+    private function _btnEasy():Void {
+        Reg.level = 1;
+        _bDecide = true;
+    }
+    private function _btnNormal():Void {
+        Reg.level = 2;
+        _bDecide = true;
+    }
+    private function _btnHard():Void {
+        Reg.level = 3;
+        _bDecide = true;
     }
 }
