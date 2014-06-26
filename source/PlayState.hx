@@ -518,13 +518,19 @@ class PlayState extends FlxState {
         }
 
         if(FlxG.keys.pressed.RIGHT) {
+            // 右キーでスピードアップ
             _speed += 10;
         }
         if(FlxG.keys.pressed.LEFT) {
+            // 左キーでスピードダウン
             _speed -= 10;
             if(_speed < SPEED_START) {
                 _speed = SPEED_START;
             }
+        }
+        if(FlxG.keys.justPressed.D) {
+            // 自爆
+            _player.damage(99999);
         }
 
         _cntRing = _rings.countLiving();
