@@ -1,4 +1,5 @@
 package ;
+import flixel.util.FlxColor;
 import flixel.ui.FlxBar;
 import flixel.addons.effects.FlxTrail;
 import haxe.xml.Check.Attrib;
@@ -19,6 +20,7 @@ class Player extends FlxSprite {
     private static inline var DAMAGE_INIT = 2; // 初期ダメージ
     private static inline var DAMAGE_MAX = 40; // 最大ダメージ
     private static inline var DAMAGE_CNT = 32; // 最大ダメージに到達するまでの連続ヒット数
+    private static inline var DANGER_RATIO = 0.3; // 危険状態とするHPの残量
 
     // 変数
     private var _attr:Attribute; // 属性
@@ -28,6 +30,7 @@ class Player extends FlxSprite {
     private var _tDamage:Int; // ダメージタイマー
     private var _barHp:FlxBar; // 体力バー
     private var _cntHit:Int; // 蓄積ダメージ数
+    private var _tAnime:Int; // アニメ用タイマー
 
     /**
      * 生成
@@ -55,6 +58,7 @@ class Player extends FlxSprite {
         _hp = HP_MAX;
         _tDamage = 0;
         _cntHit = 0;
+        _tAnime = 0;
     }
 
     // 属性の取得
@@ -82,9 +86,21 @@ class Player extends FlxSprite {
 //        velocity.set(dx, dy);
         velocity.y = dy;
 
+        // ダメージタイマー
         if(_tDamage > 0) {
             visible = _tDamage%4 < 2;
             _tDamage--;
+        }
+
+        _tAnime++;
+        // ピンチ状態の更新
+        if(color != FlxColor.WHITE) {
+            color = FlxColor.WHITE;
+        }
+        if(getHpRatio() < DANGER_RATIO) {
+            if(_tAnime%24 < 12) {
+                color = FlxColor.RED;
+            }
         }
 
         // 体力バーの更新
