@@ -78,6 +78,10 @@ class Player extends FlxSprite {
     override public function update():Void {
         super.update();
 
+        if(isDead()) {
+            return;
+        }
+
         // マウスの座標に向かって移動する
         var p = FlxG.mouse.getWorldPosition();
 
@@ -115,6 +119,10 @@ class Player extends FlxSprite {
             _barHp.x = x;
             _barHp.y = y + 24;
         }
+    }
+
+    public function vanish():Void {
+        kill();
     }
 
     /**

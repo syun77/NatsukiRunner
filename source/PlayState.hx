@@ -24,6 +24,8 @@ private enum State {
     ChangeWait;     // 色変え演出中
     StageClearInit; // ステージクリア・初期化
     StageClearMain; // ステージクリア・メイン
+    GameoverInit;   // ゲームオーバー・初期化
+    GameoverMain;   // ゲームオーバー・メイン
 }
 
 /**
@@ -42,6 +44,7 @@ class PlayState extends FlxState {
 
     // タイマー
     private static inline var TIMER_STAGE_CLEAR_INIT = 30;
+    private static inline var TIMER_GAMEOVER_INIT = 30;
     private static inline var TIMER_CHANGE_WAIT = 100;
     private static inline var TIMER_DAMAGE = 30;
 
@@ -200,6 +203,8 @@ class PlayState extends FlxState {
             case State.ChangeWait: _updateChangeWait();
             case State.StageClearInit: _updateStageClearInit();
             case State.StageClearMain: _updateStageClearMain();
+            case State.GameoverInit: _updateGameoverInit();
+            case State.GameoverMain: _updateGameoverMain();
         }
 
         // デバッグ処理
@@ -339,6 +344,21 @@ class PlayState extends FlxState {
             _txtMessage.visible = true;
             return;
         }
+        if(_player.isDead()) {
+            // プレイヤー死亡
+            _player.vanish();
+            _barHp.kill();
+            _follow.kill();
+            _state = State.GameoverInit;
+            _timer = TIMER_GAMEOVER_INIT;
+            // 画面を1秒間、白フラッシュします
+            FlxG.camera.flash(0xffFFFFFF, 1);
+            // 画面を2%の揺れ幅で0.35秒間、揺らします
+            FlxG.camera.shake(0.02, 0.35);
+            _txtMessage.text = "Game Over...";
+            _txtMessage.visible = true;
+            return;
+        }
 
         // マップからオブジェクトを配置
         _putObjects();
@@ -373,6 +393,23 @@ class PlayState extends FlxState {
             _player.active = false;
         }
         if(FlxG.mouse.justPressed) {
+            // TODO: タイトル画面へ戻る
+            FlxG.resetState();
+        }
+    }
+
+    /**
+     * ゲームオーバー
+     **/
+    private function _updateGameoverInit():Void {
+        _timer--;
+        if(_timer < 1) {
+            _state = State.GameoverMain;
+        }
+    }
+    private function _updateGameoverMain():Void {
+        if(FlxG.mouse.justPressed) {
+            // TODO: タイトル画面へ戻る
             FlxG.resetState();
         }
     }
