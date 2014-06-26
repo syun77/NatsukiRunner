@@ -19,7 +19,7 @@ class Player extends FlxSprite {
     private static inline var TIMER_DAMAGE = 60;
     private static inline var DAMAGE_INIT = 2; // 初期ダメージ
     private static inline var DAMAGE_MAX = 40; // 最大ダメージ
-    private static inline var DAMAGE_CNT = 20; // 最大ダメージに到達するまでの連続ヒット数
+    private static inline var DAMAGE_CNT = 28; // 最大ダメージに到達するまでの連続ヒット数
     private static inline var DANGER_RATIO = 0.3; // 危険状態とするHPの残量
 
     // 変数
