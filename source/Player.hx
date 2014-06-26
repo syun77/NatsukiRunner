@@ -67,6 +67,8 @@ class Player extends FlxSprite {
     public function getHpRatio():Float { return 1.0 * _hp / HP_MAX; }
     // 死亡しているかどうか
     public function isDead():Bool { return _hp <= 0; }
+    // 危険チェック
+    public function isDanger():Bool { return getHpRatio() < DANGER_RATIO; }
     // HPバー
     public function setHpBar(bar:FlxBar) { _barHp = bar; }
 

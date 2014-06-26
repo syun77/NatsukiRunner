@@ -1,5 +1,6 @@
 package;
 
+import flixel.util.FlxColor;
 import flixel.ui.FlxBar;
 import flixel.addons.display.FlxBackdrop;
 import flixel.util.FlxAngle;
@@ -307,6 +308,17 @@ class PlayState extends FlxState {
         }
         _back.x = _scrollX;
         _back2.x = _scrollX + FlxG.width;
+
+        // ピンチチェック
+        if(_back.color != FlxColor.WHITE) {
+            _back.color = FlxColor.WHITE;
+            _back2.color = FlxColor.WHITE;
+        }
+        if(_player.isDanger()) {
+            // 背景を赤くする
+            _back.color = FlxColor.RED;
+            _back2.color = FlxColor.RED;
+        }
 
     }
 
