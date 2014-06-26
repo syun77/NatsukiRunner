@@ -382,7 +382,10 @@ class PlayState extends FlxState {
     private function _vsPlayerBlock(p:Player, b:Block):Void {
 
         if(p.getAttribute() == b.getAttribute()) {
+            // スピードアップ
             _speed += SPEED_ADD;
+            // HP回復
+            _player.addHp();
         }
         else {
             // ペナルティ

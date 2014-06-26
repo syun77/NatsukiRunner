@@ -14,9 +14,11 @@ class Player extends FlxSprite {
     private static inline var MOVE_DECAY = 0.9;
     private static inline var MOVE_REVISE = 5;
     private static inline var HP_MAX = 100;
-    private static inline var TIMER_DAMAGE = 30;
-    private static inline var DAMAGE_INIT = 40; // 初期ダメージ
-    private static inline var DAMAGE_VAL = 2; // 連続ダメージ
+    private static inline var HP_RECOVER = 1; // デフォルトのHP回復量
+    private static inline var TIMER_DAMAGE = 60;
+    private static inline var DAMAGE_INIT = 2; // 初期ダメージ
+    private static inline var DAMAGE_MAX = 40; // 最大ダメージ
+    private static inline var DAMAGE_CNT = 32; // 最大ダメージに到達するまでの連続ヒット数
 
     // 変数
     private var _attr:Attribute; // 属性
@@ -25,6 +27,7 @@ class Player extends FlxSprite {
     private var _hp:Float; // 体力
     private var _tDamage:Int; // ダメージタイマー
     private var _barHp:FlxBar; // 体力バー
+    private var _cntHit:Int; // 蓄積ダメージ数
 
     /**
      * 生成
@@ -51,6 +54,7 @@ class Player extends FlxSprite {
 
         _hp = HP_MAX;
         _tDamage = 0;
+        _cntHit = 0;
     }
 
     // 属性の取得
@@ -79,6 +83,7 @@ class Player extends FlxSprite {
         velocity.y = dy;
 
         if(_tDamage > 0) {
+            visible = _tDamage%4 < 2;
             _tDamage--;
         }
 
@@ -95,19 +100,31 @@ class Player extends FlxSprite {
     }
 
     /**
+     * HP回復
+     **/
+    public function addHp(v:Float=HP_RECOVER):Void {
+        _hp += v;
+        _hp = if(_hp > HP_MAX) HP_MAX else _hp;
+    }
+
+    /**
      * ダメージ処理
      * @param v ダメージ量
      **/
     public function damage(v:Int=DAMAGE_INIT):Void {
 
         if(_tDamage > 0) {
-            // 連続ダメージなので少なめ
-            _hp -= DAMAGE_VAL;
+            // 連続ダメージなのでペナルティ
+            var diff:Float = (DAMAGE_MAX - DAMAGE_INIT) / DAMAGE_CNT;
+            var val = v + diff * _cntHit;
+            _hp -= val;
+            _cntHit++;
         }
         else {
             // 初期ダメージ
             _hp -= v;
             _tDamage = TIMER_DAMAGE;
+            _cntHit = 1;
         }
         _hp = if(_hp < 0) 0 else _hp;
     }
