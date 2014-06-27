@@ -390,6 +390,13 @@ class PlayState extends FlxState {
                 // ゲーム開始
                 _state = State.Main;
             case 3:
+                FlxTween.tween(_eftStart.scale, {x:0.25, y:4}, 0.1, { ease: FlxEase.expoInOut, complete:_cbStart});
+                _tStart++;
+            case 4:
+                FlxTween.tween(_eftStart.scale, {x:16, y:0}, 0.75, { ease: FlxEase.expoOut, complete:_cbStart});
+                FlxTween.tween(_eftStart, {alpha:0}, 0.75, { ease: FlxEase.expoOut});
+                _tStart++;
+            case 5:
                 _eftStart.kill();
         }
     }
