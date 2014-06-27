@@ -1,5 +1,7 @@
 package;
 
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 import spinehx.SkeletonData;
 import DefaultAssetLibrary;
 import flixel.addons.editors.spine.FlxSpine;
@@ -45,14 +47,13 @@ class PlayState extends FlxState {
     private static inline var SPEED_ADD_DEFAULT:Float = 0.3; // デフォルトでの速度上昇
     private static inline var SPEED_DEFAULT_MAX:Float = 100; // デフォルトでの速度上昇制限
     private static inline var SPEED_MAX:Float = 384; // 最大速度
-    private var POS_SPINE_START_X:Float;
-    private var POS_SPINE_START_Y:Float;
 
     // タイマー
     private static inline var TIMER_STAGE_CLEAR_INIT = 30;
     private static inline var TIMER_GAMEOVER_INIT = 30;
     private static inline var TIMER_CHANGE_WAIT = 100;
     private static inline var TIMER_DAMAGE = 30;
+    private static inline var TIMER_START:Float = 0.75;
 
     // ゲームオブジェクト
     private var _player:Player;
@@ -65,9 +66,8 @@ class PlayState extends FlxState {
     private var _eftPlayer:FlxSprite;
     private var _emitterBlockBlue:EmitterBlockBlue;
     private var _emitterBlockRed:EmitterBlockRed;
-
-    // Spine
-    private var _spineStart:FlxSpine;
+    private var _eftStart:FlxSprite;
+    private var _tStart:Int = 0;
 
     // メッセージ
     private var _txtMessage:FlxText;
@@ -150,13 +150,13 @@ class PlayState extends FlxState {
 
         // Spine
         var data = FlxSpine.readSkeletonData("skeleton", "assets/spine/start/");
-        POS_SPINE_START_X = FlxG.width/2+16;
-        POS_SPINE_START_Y = FlxG.height/2;
-        _spineStart = new FlxSpine(data, POS_SPINE_START_X-20, POS_SPINE_START_Y);
-        _spineStart.flipY = true;
-        _spineStart.scrollFactor.set(0, 0);
-        add(_spineStart);
-        _spineStart.state.setAnimationByName("3", false);
+        _eftStart = new FlxSprite(FlxG.width/2-16, FlxG.height/2-16);
+        _eftStart.loadGraphic("assets/images/start/3.png");
+        _eftStart.scrollFactor.set(0, 0);
+        _eftStart.scale.set(2, 2);
+        FlxTween.tween(_eftStart.scale, {x:1, y:1}, TIMER_START, { ease: FlxEase.expoOut, complete:_cbStart});
+        add(_eftStart);
+        _tStart = 0;
 
         // パーティクル
         _emitterBlockBlue = new EmitterBlockBlue();
@@ -366,39 +366,45 @@ class PlayState extends FlxState {
         }
 
     }
+    /**
+     * 開始演出のコールバック
+     **/
+    private function _cbStart(tween:FlxTween):Void {
+        switch(_tStart) {
+            case 0:
+                _eftStart.scale.set(2, 2);
+                _eftStart.loadGraphic("assets/images/start/2.png");
+                FlxTween.tween(_eftStart.scale, {x:1, y:1}, TIMER_START, { ease: FlxEase.expoOut, complete:_cbStart});
+                _tStart++;
+            case 1:
+                _eftStart.scale.set(2, 2);
+                _eftStart.loadGraphic("assets/images/start/1.png");
+                FlxTween.tween(_eftStart.scale, {x:1, y:1}, TIMER_START, { ease: FlxEase.expoOut, complete:_cbStart});
+                _tStart++;
+            case 2:
+                _eftStart.scale.set(2, 2);
+                _eftStart.loadGraphic("assets/images/start/go.png");
+                _eftStart.x -= 16;
+                FlxTween.tween(_eftStart.scale, {x:1, y:1}, TIMER_START, { ease: FlxEase.expoOut, complete:_cbStart});
+                _tStart++;
+                // ゲーム開始
+                _state = State.Main;
+            case 3:
+                _eftStart.kill();
+        }
+    }
 
     /**
      * 更新・スタート
      **/
     private function _updateStart():Void {
         _setFolloPosition();
-        if(_spineStart.state.isComplete()) {
-            switch(_timer) {
-                case 0:
-                    _spineStart.state.setAnimationByName("2", false);
-                    _timer++;
-                case 1:
-                    _spineStart.state.setAnimationByName("1", false);
-                    _timer++;
-                case 2:
-                    _spineStart.state.setAnimationByName("go", false);
-                    _state = State.Main;
-            }
-        }
     }
 
     /**
      * 更新・メイン
      **/
     private function _updateMain():Void {
-
-        if(_spineStart.exists) {
-            _spineStart.x = POS_SPINE_START_X + FlxG.camera.scroll.x;
-            _spineStart.y = POS_SPINE_START_Y + FlxG.camera.scroll.y;
-            if(_spineStart.state.isComplete()) {
-                _spineStart.kill();
-            }
-        }
 
         // スクロール処理
         _updateScroll();
