@@ -66,6 +66,7 @@ class PlayState extends FlxState {
     private var _eftPlayer:FlxSprite;
     private var _emitterBlockBlue:EmitterBlockBlue;
     private var _emitterBlockRed:EmitterBlockRed;
+    private var _emitterPlayer:EmitterPlayer;
     private var _eftStart:FlxSprite;
     private var _tStart:Int = 0;
 
@@ -148,8 +149,7 @@ class PlayState extends FlxState {
         _eftPlayer.kill();
         add(_eftPlayer);
 
-        // Spine
-        var data = FlxSpine.readSkeletonData("skeleton", "assets/spine/start/");
+        // 開始エフェクト
         _eftStart = new FlxSprite(FlxG.width/2-16, FlxG.height/2-16);
         _eftStart.loadGraphic("assets/images/start/3.png");
         _eftStart.scrollFactor.set(0, 0);
@@ -161,8 +161,10 @@ class PlayState extends FlxState {
         // パーティクル
         _emitterBlockBlue = new EmitterBlockBlue();
         _emitterBlockRed = new EmitterBlockRed();
+        _emitterPlayer = new EmitterPlayer();
         add(_emitterBlockBlue);
         add(_emitterBlockRed);
+        add(_emitterPlayer);
 
         // テキスト
         _txtMessage = new FlxText(0, FlxG.height/2-12, FlxG.width);
@@ -436,6 +438,9 @@ class PlayState extends FlxState {
             FlxG.camera.flash(0xffFFFFFF, 1);
             // 画面を5%の揺れ幅で0.35秒間、揺らします
             FlxG.camera.shake(0.05, 0.35);
+            // エフェクト生成
+            _emitterPlayer.explode(_player.x, _player.y);
+            // メッセージ表示
             _txtMessage.text = "Game Over...";
             _txtMessage.visible = true;
             return;
