@@ -3,7 +3,6 @@
   <component name="HaxeModuleSettingsStorage">
     <option name="buildConfig" value="3" />
     <option name="flexSdkName" value="flex_4.6" />
-    <option name="openFLTarget" value="Neko" />
   </component>
   <component name="NewModuleRootManager" inherit-compiler-output="false">
     <output url="file://$MODULE_DIR$/export" />
@@ -19,6 +18,7 @@
     <orderEntry type="library" name="Flixel Engine" level="application" />
     <orderEntry type="library" name="3,3,4" level="project" />
     <orderEntry type="library" name="1,1,0" level="project" />
+    <orderEntry type="library" name="0,2,0" level="project" />
   </component>
 </module>
 

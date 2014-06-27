@@ -1,5 +1,8 @@
 package;
 
+import spinehx.SkeletonData;
+import DefaultAssetLibrary;
+import flixel.addons.editors.spine.FlxSpine;
 import flixel.util.FlxColor;
 import flixel.ui.FlxBar;
 import flixel.addons.display.FlxBackdrop;
@@ -20,6 +23,7 @@ import flixel.FlxState;
  * 状態
  **/
 private enum State {
+    Start;          // 開始演出
     Main;           // メイン
     ChangeWait;     // 色変え演出中
     StageClearInit; // ステージクリア・初期化
@@ -41,6 +45,8 @@ class PlayState extends FlxState {
     private static inline var SPEED_ADD_DEFAULT:Float = 0.3; // デフォルトでの速度上昇
     private static inline var SPEED_DEFAULT_MAX:Float = 100; // デフォルトでの速度上昇制限
     private static inline var SPEED_MAX:Float = 384; // 最大速度
+    private var POS_SPINE_START_X:Float;
+    private var POS_SPINE_START_Y:Float;
 
     // タイマー
     private static inline var TIMER_STAGE_CLEAR_INIT = 30;
@@ -59,6 +65,9 @@ class PlayState extends FlxState {
     private var _eftPlayer:FlxSprite;
     private var _emitterBlockBlue:EmitterBlockBlue;
     private var _emitterBlockRed:EmitterBlockRed;
+
+    // Spine
+    private var _spineStart:FlxSpine;
 
     // メッセージ
     private var _txtMessage:FlxText;
@@ -139,6 +148,16 @@ class PlayState extends FlxState {
         _eftPlayer.kill();
         add(_eftPlayer);
 
+        // Spine
+        var data = FlxSpine.readSkeletonData("skeleton", "assets/spine/start/");
+        POS_SPINE_START_X = FlxG.width/2+16;
+        POS_SPINE_START_Y = FlxG.height/2;
+        _spineStart = new FlxSpine(data, POS_SPINE_START_X-20, POS_SPINE_START_Y);
+        _spineStart.flipY = true;
+        _spineStart.scrollFactor.set(0, 0);
+        add(_spineStart);
+        _spineStart.state.setAnimationByName("3", false);
+
         // パーティクル
         _emitterBlockBlue = new EmitterBlockBlue();
         _emitterBlockRed = new EmitterBlockRed();
@@ -154,7 +173,7 @@ class PlayState extends FlxState {
         add(_txtMessage);
 
         // 変数初期化
-        _state = State.Main;
+        _state = State.Start;
         _timer = 0;
         _speed = SPEED_START;
 
@@ -214,6 +233,7 @@ class PlayState extends FlxState {
         _hud.updateAll();
 
         switch(_state) {
+            case State.Start: _updateStart();
             case State.Main: _updateMain();
             case State.ChangeWait: _updateChangeWait();
             case State.StageClearInit: _updateStageClearInit();
@@ -292,6 +312,18 @@ class PlayState extends FlxState {
         }
     }
 
+    private function _setFolloPosition():Void {
+
+        // カメラがフォローするオブジェクトの位置を調整
+        var diffSpeed = SPEED_MAX - _speed;
+        var dx:Float = 0;
+        if(diffSpeed > 0) {
+            diffSpeed = SPEED_MAX - diffSpeed;
+            dx = 64 * Math.cos(FlxAngle.TO_RAD * 90 * diffSpeed / SPEED_MAX);
+        }
+        _follow.x = _player.x + FlxG.width/2 - dx;
+    }
+
     /**
      * 各種スクロール処理
      **/
@@ -311,14 +343,7 @@ class PlayState extends FlxState {
         _player.velocity.x = _speed;
         _follow.velocity.x = _speed;
 
-        // カメラがフォローするオブジェクトの位置を調整
-        var diffSpeed = SPEED_MAX - _speed;
-        var dx:Float = 0;
-        if(diffSpeed > 0) {
-            diffSpeed = SPEED_MAX - diffSpeed;
-            dx = 64 * Math.cos(FlxAngle.TO_RAD * 90 * diffSpeed / SPEED_MAX);
-        }
-        _follow.x = _player.x + FlxG.width/2 - dx;
+        _setFolloPosition();
 
         // 背景をスクロールする
         _scrollX -= BACK_SCROLL_SPEED;
@@ -343,9 +368,37 @@ class PlayState extends FlxState {
     }
 
     /**
+     * 更新・スタート
+     **/
+    private function _updateStart():Void {
+        _setFolloPosition();
+        if(_spineStart.state.isComplete()) {
+            switch(_timer) {
+                case 0:
+                    _spineStart.state.setAnimationByName("2", false);
+                    _timer++;
+                case 1:
+                    _spineStart.state.setAnimationByName("1", false);
+                    _timer++;
+                case 2:
+                    _spineStart.state.setAnimationByName("go", false);
+                    _state = State.Main;
+            }
+        }
+    }
+
+    /**
      * 更新・メイン
      **/
     private function _updateMain():Void {
+
+        if(_spineStart.exists) {
+            _spineStart.x = POS_SPINE_START_X + FlxG.camera.scroll.x;
+            _spineStart.y = POS_SPINE_START_Y + FlxG.camera.scroll.y;
+            if(_spineStart.state.isComplete()) {
+                _spineStart.kill();
+            }
+        }
 
         // スクロール処理
         _updateScroll();
