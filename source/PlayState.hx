@@ -193,12 +193,13 @@ class PlayState extends FlxState {
 
         // デバッグ用
         FlxG.debugger.toggleKeys = ["ALT"];
-        FlxG.watch.add(_player, "x");
-        FlxG.watch.add(_player, "y");
-        FlxG.watch.add(_player, "_hp");
-        FlxG.watch.add(FlxG.camera.scroll, "x");
         FlxG.watch.add(this, "_state");
         FlxG.watch.add(this, "_timer");
+
+        FlxG.watch.add(this, "_cntRing");
+        FlxG.watch.add(this, "_cntBlock");
+        FlxG.watch.add(this, "_comboMax");
+        FlxG.watch.add(_player, "_hp");
     }
 
     /**
