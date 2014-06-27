@@ -91,9 +91,11 @@ class PlayState extends FlxState {
     private var _tDamage:Int   = 0; // ダメージによるペナルティ時間
     private var _combo:Int     = 0; // コンボ数
 
-    // デバッグ用
-    private var _cntRing:Int;
-    private var _cntBlock:Int;
+    // リザルト用変数
+    private var _cntBlock:Int = 0; // ブロック破壊数
+    private var _cntRing:Int  = 0; // リング獲得数
+    private var _pasttime:Int = 0; // 経過時間
+    private var _comboMax:Int = 0; // 最大コンボ数
 
     /**
 	 * 生成
@@ -179,9 +181,6 @@ class PlayState extends FlxState {
         _timer = 0;
         _speed = SPEED_START;
 
-        _cntRing = 0;
-        _cntBlock = 0;
-
         var width = _tmx.width * _tmx.tileWidth;
         var height = _tmx.height * _tmx.tileHeight;
         FlxG.camera.follow(_follow, FlxCamera.STYLE_NO_DEAD_ZONE);
@@ -194,8 +193,6 @@ class PlayState extends FlxState {
 
         // デバッグ用
         FlxG.debugger.toggleKeys = ["ALT"];
-        FlxG.watch.add(this, "_cntRing");
-        FlxG.watch.add(this, "_cntBlock");
         FlxG.watch.add(_player, "x");
         FlxG.watch.add(_player, "y");
         FlxG.watch.add(_player, "_hp");
@@ -210,6 +207,11 @@ class PlayState extends FlxState {
     private function _addCombo():Void {
         _combo++;
         _hud.setCombo(_combo);
+
+        if(_combo > _comboMax) {
+            // コンボ最大数更新
+            _comboMax = _combo;
+        }
     }
 
     /**
@@ -507,6 +509,9 @@ class PlayState extends FlxState {
         }
         v.vanish();
 
+        // リング獲得数アップ
+        _cntRing++;
+
         _startChangeWait();
 
     }
@@ -543,6 +548,9 @@ class PlayState extends FlxState {
             _emitterBlockBlue.explode(b.x, b.y);
         }
         b.vanish();
+
+        // ブロック破壊数アップ
+        _cntBlock++;
     }
 
     /**
@@ -620,8 +628,5 @@ class PlayState extends FlxState {
             // 自爆
             _player.damage(99999);
         }
-
-        _cntRing = _rings.countLiving();
-        _cntBlock = _blocks.countLiving();
     }
 }
