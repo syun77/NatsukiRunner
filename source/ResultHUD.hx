@@ -32,6 +32,8 @@ class ResultHUD extends FlxGroup {
 
     private var _objs:Array<FlxObject>;
 
+    private var _bEnd:Bool = false; // 演出が完了したかどうか
+
     /**
      * コンストラクタ
      * @param cntRing リング獲得数
@@ -68,8 +70,10 @@ class ResultHUD extends FlxGroup {
         var rank = "S";
         // ランク判定
         for(i in 1...csv.size()+1) {
-            var score = csv.getInt(i, "score");
-            if(scTotal < score) {
+            var a = 0;
+            if(i > 1) { a = csv.getInt(i-1, "score"); }
+            var b = csv.getInt(i, "score");
+            if(a <= scTotal && scTotal < b) {
                 // ランク決定
                 rank = csv.getString(i, "rank");
                 break;
@@ -178,6 +182,11 @@ class ResultHUD extends FlxGroup {
     }
 
     private function _cbShake(timer:FlxTimer):Void {
-        FlxG.camera.shake(0.02, 0.3);
+//        FlxG.camera.shake(0.02, 0.3);
+        _bEnd = true;
+    }
+
+    public function isEnd():Bool {
+        return _bEnd;
     }
 }

@@ -493,7 +493,7 @@ class PlayState extends FlxState {
         if(_player.x > _tmx.width * _tmx.tileWidth) {
             _player.active = false;
         }
-        if(FlxG.mouse.justPressed) {
+        if(FlxG.mouse.justPressed && _result.isEnd()) {
             FlxG.switchState(new MenuState());
         }
     }
@@ -519,7 +519,7 @@ class PlayState extends FlxState {
         }
     }
     private function _updateGameoverMain():Void {
-        if(FlxG.mouse.justPressed) {
+        if(FlxG.mouse.justPressed && _result.isEnd()) {
             FlxG.switchState(new MenuState());
         }
     }

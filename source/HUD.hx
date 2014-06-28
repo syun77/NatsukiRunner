@@ -55,8 +55,9 @@ class HUD extends FlxGroup {
         _txtLevel = new FlxText(-8, y2, width);
         _txtLevel.text = Reg.getLevelName();
         _txtLevel.alignment = "right";
-        _txtCombo = new FlxText(4, 4, 64);
-        _txtCombo2 = new FlxText(4, 30, 80);
+        _txtCombo = new FlxText(FlxG.width-72, FlxG.height-56, 64);
+        _txtCombo.alignment = "center";
+        _txtCombo2 = new FlxText(FlxG.width-56, FlxG.height-32, 80);
         _txtCombo2.text = "combo";
         _txtCombo2.visible = false;
 
