@@ -116,7 +116,7 @@ class ResultHUD extends FlxGroup {
         _txtTotal.alignment = "center";
         _txtTotal.size = 16;
         _txtTotal.text = "Total: " + scTotal;
-        FlxTween.tween(_txtTotal, {x:0}, 0.5, {ease:FlxEase.quadOut, startDelay:1.5});
+        FlxTween.tween(_txtTotal, {x:0}, 0.5, {ease:FlxEase.bounceOut, startDelay:1.5});
 
         // ランク
         _txtRank = new FlxText(FlxG.width-128, FlxG.height-48, 128);

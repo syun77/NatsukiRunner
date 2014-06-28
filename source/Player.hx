@@ -30,6 +30,7 @@ class Player extends FlxSprite {
     private var _barHp:FlxBar; // 体力バー
     private var _cntHit:Int; // 蓄積ダメージ数
     private var _tAnime:Int; // アニメ用タイマー
+    private var _eftAttribute:FlxSprite; // 属性エフェクト
 
     // タッチ情報
     private var _touchId:Int; // 現在のタッチID
@@ -47,6 +48,13 @@ class Player extends FlxSprite {
         animation.add("blue", [0]);
         animation.add("red", [1]);
 
+        _eftAttribute = new FlxSprite();
+        _eftAttribute.loadGraphic("assets/images/attribute.png", true);
+        _eftAttribute.animation.add("blue", [0]);
+        _eftAttribute.animation.add("red", [1]);
+        _eftAttribute.alpha = 0.8;
+        FlxG.state.add(_eftAttribute);
+
         _attr = Attribute.Blue;
         immovable = true;
 
@@ -54,8 +62,9 @@ class Player extends FlxSprite {
         _trailRed = new FlxTrail(this);
         FlxG.state.add(_trailRed);
         _trailRed.kill();
-
         animation.play("blue");
+        _eftAttribute.animation.play("blue");
+
         _trailBlue = new FlxTrail(this);
         FlxG.state.add(_trailBlue);
 
@@ -81,6 +90,9 @@ class Player extends FlxSprite {
      **/
     override public function update():Void {
         super.update();
+        // エフェクトの位置を更新
+        _eftAttribute.x = x - 16;
+        _eftAttribute.y = y - 16;
 
         // 画面外に出ないようする
         if(y < 0) { y = 0; }
@@ -159,6 +171,7 @@ class Player extends FlxSprite {
 
     public function vanish():Void {
         kill();
+        _eftAttribute.kill();
         _trailBlue.kill();
         _trailRed.kill();
     }
@@ -211,6 +224,7 @@ class Player extends FlxSprite {
             _trailBlue.revive();
         }
         animation.play(name);
+        _eftAttribute.animation.play(name);
     }
 
     /**
