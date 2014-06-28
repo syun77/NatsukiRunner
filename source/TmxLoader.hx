@@ -1,21 +1,25 @@
 package ;
 
+import flixel.FlxG;
 import openfl.Assets;
 import Layer2D;
 
 class TmxLoader {
     private var _layers:Array<Layer2D>;
+    private var _tmpLayer:Layer2D;
     private var _properties:Map<String, String>;
-    private var _width:Int;
-    private var _height:Int;
-    private var _tileWidth:Int;
-    private var _tileHeight:Int;
+    private var _width:Int = 0;
+    private var _height:Int = 0;
+    private var _tileWidth:Int = 0;
+    private var _tileHeight:Int = 0;
     public var width(get_width, null):Int;
     public var height(get_height, null):Int;
     public var tileWidth(get_tileWidth, null):Int;
     public var tileHeight(get_tileHeight, null):Int;
 
     public function new() {
+        // 読み込み失敗時のテンポラリ
+        _tmpLayer = new Layer2D();
     }
 
     /**
@@ -24,10 +28,17 @@ class TmxLoader {
      * @return Layer2D
      **/
     public function load(filepath:String): Void {
+
         _layers = new Array<Layer2D>();
         _properties = new Map<String, String>();
 
         var tmx:String = Assets.getText(filepath);
+        if(tmx != null) {
+            // 読み込み失敗
+            FlxG.log.warn("TmxLoader.load() tmx is null. file:'" + filepath + "''");
+            return;
+        }
+
         // mapノード
         var map:Xml = Xml.parse(tmx).firstElement();
         _width = Std.parseInt(map.get("width"));
@@ -81,6 +92,13 @@ class TmxLoader {
     }
 
     public function getLayer(idx:Int):Layer2D {
+
+        if(_layers.length == 0) {
+            // 読み込めていない
+            FlxG.log.warn("TmxLoader.getLayer() _layers.length is 0.");
+            return _tmpLayer;
+        }
+
         return _layers[idx];
     }
 

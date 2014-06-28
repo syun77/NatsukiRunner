@@ -1,5 +1,6 @@
 package ;
 
+import flixel.FlxG;
 import openfl.Assets;
 
 /**
@@ -21,6 +22,10 @@ class CsvLoader {
     public function load(filepath:String):Void {
         _datas = new Map<Int, Map<String, String>>();
         var text:String = Assets.getText(filepath);
+        if(text == null) {
+            FlxG.log.warn("CsvLoader.load() text is null. file:'" + filepath + "''");
+            return;
+        }
         var row = 0;
         for(line in text.split("\n")) {
             if(line == "") { continue; }
