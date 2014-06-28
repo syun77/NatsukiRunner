@@ -191,6 +191,8 @@ class PlayState extends FlxState {
         _hud = new HUD(_player, width, SPEED_MAX);
         this.add(_hud);
 
+        _putObjects();
+
         // デバッグ用
         FlxG.debugger.toggleKeys = ["ALT"];
         FlxG.watch.add(this, "_state");

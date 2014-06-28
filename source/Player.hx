@@ -2,7 +2,6 @@ package ;
 import flixel.util.FlxColor;
 import flixel.ui.FlxBar;
 import flixel.addons.effects.FlxTrail;
-import haxe.xml.Check.Attrib;
 import flixel.FlxG;
 import flixel.FlxSprite;
 
@@ -31,6 +30,11 @@ class Player extends FlxSprite {
     private var _barHp:FlxBar; // 体力バー
     private var _cntHit:Int; // 蓄積ダメージ数
     private var _tAnime:Int; // アニメ用タイマー
+
+    // タッチ情報
+    private var _touchId:Int; // 現在のタッチID
+    private var _touchStartX:Float; // タッチ開始X座標
+    private var _touchStartY:Float; // タッチ開始Y座標
 
     /**
      * 生成
@@ -78,6 +82,11 @@ class Player extends FlxSprite {
     override public function update():Void {
         super.update();
 
+        // 画面外に出ないようする
+        if(y < 0) { y = 0; }
+        if(y > FlxG.height-16) { y = FlxG.height-16; }
+
+#if FLX_NO_TOUCH
         // マウスの座標に向かって移動する
         var p = FlxG.mouse.getWorldPosition();
 
@@ -85,6 +94,37 @@ class Player extends FlxSprite {
         var dy = p.y - (y + height/2);
         dx *= MOVE_DECAY * MOVE_REVISE;
         dy *= MOVE_DECAY * MOVE_REVISE;
+#else
+        var dx:Float = 0;
+        var dy:Float = 0;
+        for(touch in FlxG.touches.list) {
+            if(touch.justPressed) {
+                // タッチIDを格納
+                _touchId = touch.touchPointID;
+                _touchStartX = touch.screenX;
+                _touchStartY = touch.screenY;
+            }
+
+            if(touch.touchPointID != _touchId) {
+                // 最後のタッチのみ判定
+                continue;
+            }
+            var tx = touch.screenX;
+            var ty = touch.screenY;
+
+            var dx2 = tx - _touchStartX;
+            var dy2 = ty - _touchStartY;
+            dx2 *= FlxG.updateFramerate * 0.2;
+            dy2 *= FlxG.updateFramerate * 0.2;
+            dx = velocity.x + dx2;
+            dy = velocity.y + dy2;
+            dx *= 0.9;
+            dy *= 0.9;
+
+            _touchStartX = tx;
+            _touchStartY = ty;
+        }
+#end
 //        velocity.set(dx, dy);
         velocity.y = dy;
 

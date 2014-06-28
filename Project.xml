@@ -2,7 +2,13 @@
 <project>
 	<!------------------------------APPLICATION SETTINGS---------------------------->
 	
-	<app title="MyProject" file="MyProject" main="Main" version="0.0.1" company="HaxeFlixel" />
+	<app title="MyProject" file="MyProject" main="Main" version="1.0.0" company="2dgames.jp" />
+
+    <meta title="Natsuki" package="jp.2dgames.test" version="1.0.0" company="2dgames.jp" />
+    <ios deployment="5" binaries="armv7" devices="iphone" />
+    <ios linker-flags="" prerendered-icon="false" />
+    <window hardware="true" allow-shaders="true" require-shaders="true" if="cpp"/>
+    <window vsync="true" antialiasing="4" if="cpp" />
 	
 	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
 	<!--or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"!-->
@@ -59,7 +65,7 @@
 	<!--Optimise inputs, be careful you will get null errors if you don't use conditionals in your game-->
 	<!--haxedef name="FLX_NO_MOUSE" if="mobile" /-->
 	<!--haxedef name="FLX_NO_KEYBOARD" if="mobile" /-->
-	<!--haxedef name="FLX_NO_TOUCH" if="desktop" /-->
+	<haxedef name="FLX_NO_TOUCH" if="desktop" />
 	<!--haxedef name="FLX_NO_GAMEPAD" /-->
 	
 	<!--Disable the Flixel core sound tray-->

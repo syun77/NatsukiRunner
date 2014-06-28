@@ -1,7 +1,6 @@
 package ;
 import flixel.FlxG;
 import flixel.util.FlxRandom;
-import flixel.util.FlxColor;
 import flixel.FlxSprite;
 
 /**

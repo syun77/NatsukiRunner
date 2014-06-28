@@ -1,6 +1,6 @@
 package ;
+import flixel.util.FlxTimer;
 import flixel.tweens.FlxEase;
-import flixel.util.FlxAngle;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.util.FlxColor;
@@ -15,6 +15,8 @@ import flixel.group.FlxGroup;
  **/
 class ResultHUD extends FlxGroup {
 
+    private var SCORE_STR = " --> ";
+
     // 表示オブジェクト
     private var _back:FlxSprite;
     private var _txtTitle:FlxText;
@@ -24,6 +26,9 @@ class ResultHUD extends FlxGroup {
     private var _txtCombo:FlxText;
     private var _txtTime:FlxText;
     private var _txtHp:FlxText;
+    private var _txtTotal:FlxText;
+    private var _txtRank:FlxText;
+    private var _txtRank2:FlxText;
 
     private var _objs:Array<FlxObject>;
 
@@ -43,13 +48,42 @@ class ResultHUD extends FlxGroup {
         pasttime:Int,
         speedMax:Float
     ) {
+        // CSVロード
+        var csv:CsvLoader = new CsvLoader();
+        csv.load("assets/levels/" + TextUtil.fillZero(Reg.level, 3) + ".csv");
+
+        // スコア計算
+        var scBlock = 10 * cntBlock;
+        var scRing  = 100 * cntRing;
+        var scSpeed = 10 * Math.floor(speedMax);
+        var scCombo = 50 * comboMax;
+        var scTime  = 0;
+        var scHp    = Math.floor(hp * hp * 0.5 / 10) * 10;
+        if(hp == 100) {
+            // HP最大ボーナス
+            scHp = 10000;
+        }
+        var scTotal = scBlock + scRing + scSpeed + scCombo + scTime + scHp;
+
+        var rank = "S";
+        // ランク判定
+        for(i in 1...csv.size()+1) {
+            var score = csv.getInt(i, "score");
+            if(scTotal < score) {
+                // ランク決定
+                rank = csv.getString(i, "rank");
+                break;
+            }
+        }
+
+        // 描画情報設定
         super();
         _objs = new Array<FlxObject>();
 
         // 背景
         _back = new FlxSprite();
         _back.makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-        FlxTween.color(_back, 1, FlxColor.WHITE, FlxColor.WHITE, 0, 0.5);
+        FlxTween.color(_back, 1, FlxColor.WHITE, FlxColor.WHITE, 0, 0.8);
         _objs.push(_back);
 
         // テキスト
@@ -59,22 +93,44 @@ class ResultHUD extends FlxGroup {
         _txtTitle.text = "Result";
         FlxTween.tween(_txtTitle, {y:8}, 1, {ease:FlxEase.expoOut});
 
+        // 各種スコア
         var x = FlxG.width;
         var y = FlxG.height/4;
         var dy = 16;
         var w = FlxG.width;
-        _txtBlock = new FlxText(x, y, w, "Break Blocks: " + cntBlock);
+        _txtBlock = new FlxText(x, y, w, "Break Blocks: " + cntBlock + SCORE_STR + scBlock);
         y += dy;
-        _txtRing = new FlxText(x, y, w,  "Get Rings: " + cntRing);
+        _txtRing = new FlxText(x, y, w,  "Get Rings: " + cntRing + SCORE_STR + scRing);
         y += dy;
-        _txtSpeed = new FlxText(x, y, w, "Max Speed: " + speedMax);
+        _txtSpeed = new FlxText(x, y, w, "Max Speed: " + Math.floor(speedMax) + SCORE_STR + scSpeed);
         y += dy;
-        _txtCombo = new FlxText(x, y, w, "Max Combo: " + comboMax);
+        _txtCombo = new FlxText(x, y, w, "Max Combo: " + comboMax + SCORE_STR + scCombo);
         y += dy;
-        _txtTime = new FlxText(x, y, w,  "Time: " + pasttime);
+        _txtTime = new FlxText(x, y, w,  "Time: " + pasttime + SCORE_STR + scTime);
         y += dy;
-        _txtHp = new FlxText(x, y, w,    "HP: " + hp);
+        _txtHp = new FlxText(x, y, w,    "HP: " + hp + SCORE_STR + scHp);
         y += dy;
+
+        // トータル
+        _txtTotal = new FlxText(FlxG.width, FlxG.height-64, FlxG.width);
+        _txtTotal.alignment = "center";
+        _txtTotal.size = 16;
+        _txtTotal.text = "Total: " + scTotal;
+        FlxTween.tween(_txtTotal, {x:0}, 0.5, {ease:FlxEase.quadOut, startDelay:1.5});
+
+        // ランク
+        _txtRank = new FlxText(FlxG.width-128, FlxG.height-48, 128);
+        _txtRank.setFormat(null, 24, FlxColor.AZURE, "center", FlxText.BORDER_OUTLINE, FlxColor.WHITE);
+        _txtRank.text = rank;
+        _txtRank.alpha = 0;
+        _txtRank.scale.set(8, 8);
+        FlxTween.tween(_txtRank, {alpha:1}, 1, {ease:FlxEase.expoOut, startDelay:2, complete:_cbEnd});
+        FlxTween.tween(_txtRank.scale, {x:1, y:1}, 1, {ease:FlxEase.expoOut, startDelay:2});
+        new FlxTimer(2.5, _cbShake);
+        _txtRank2 = new FlxText(_txtRank.x, _txtRank.y, 128);
+        _txtRank2.setFormat(null, _txtRank.size, FlxColor.AZURE, "center", FlxText.BORDER_OUTLINE, FlxColor.WHITE);
+        _txtRank2.visible = false;
+        _txtRank2.text = rank;
 
         _objs.push(_txtTitle);
         _objs.push(_txtBlock);
@@ -83,19 +139,45 @@ class ResultHUD extends FlxGroup {
         _objs.push(_txtCombo);
         _objs.push(_txtTime);
         _objs.push(_txtHp);
+        _objs.push(_txtTotal);
+        _objs.push(_txtRank);
+        _objs.push(_txtRank2);
 
         var cnt:Int = 0;
         for(o in _objs) {
             if(Std.is(o, FlxText)) {
                 var txt:FlxText = cast(o, FlxText);
-                if(txt.text != "Result") {
+                var check = function():Bool {
+                    if(txt.text == "Result") {
+                        return false;
+                    }
+                    if(txt.text == rank) {
+                        return false;
+                    }
+                    if(txt.text == "Total: " + scTotal) {
+                        return false;
+                    }
+                    return true;
+                }
+                if(check()) {
                     cnt++;
                     var delay = 0.7 + 0.1 * cnt;
-                    FlxTween.tween(txt, {x:FlxG.width/3 }, 0.7, {ease:FlxEase.expoOut, startDelay:delay});
+                    FlxTween.tween(txt, {x:FlxG.width/3 }, 0.7, {ease:FlxEase.elasticOut, startDelay:delay});
                 }
+
             }
             o.scrollFactor.set(0, 0);
             this.add(o);
         }
+    }
+
+    private function _cbEnd(tween:FlxTween):Void {
+        _txtRank2.visible = true;
+        FlxTween.tween(_txtRank2, {alpha:0}, 1, {ease:FlxEase.expoOut});
+        FlxTween.tween(_txtRank2.scale, {x:4, y:4}, 1, {ease:FlxEase.expoOut});
+    }
+
+    private function _cbShake(timer:FlxTimer):Void {
+        FlxG.camera.shake(0.02, 0.3);
     }
 }
