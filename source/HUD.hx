@@ -3,8 +3,6 @@ import flixel.ui.FlxBar;
 import Math;
 import flixel.FlxObject;
 import flixel.FlxG;
-import flixel.util.FlxColor;
-import flixel.FlxSprite;
 import flixel.text.FlxText;
 import flixel.group.FlxGroup;
 

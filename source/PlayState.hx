@@ -2,12 +2,8 @@ package;
 
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
-import spinehx.SkeletonData;
-import DefaultAssetLibrary;
-import flixel.addons.editors.spine.FlxSpine;
 import flixel.util.FlxColor;
 import flixel.ui.FlxBar;
-import flixel.addons.display.FlxBackdrop;
 import flixel.util.FlxAngle;
 import flixel.text.FlxText;
 import flixel.util.FlxPoint;
@@ -76,6 +72,9 @@ class PlayState extends FlxState {
     // HUD
     private var _hud:HUD;
 
+    // リザルト
+    private var _result:ResultHUD;
+
     // マップ
     private var _tmx:TmxLoader;
 
@@ -92,10 +91,11 @@ class PlayState extends FlxState {
     private var _combo:Int     = 0; // コンボ数
 
     // リザルト用変数
-    private var _cntBlock:Int = 0; // ブロック破壊数
-    private var _cntRing:Int  = 0; // リング獲得数
-    private var _pasttime:Int = 0; // 経過時間
-    private var _comboMax:Int = 0; // 最大コンボ数
+    private var _cntBlock:Int   = 0; // ブロック破壊数
+    private var _cntRing:Int    = 0; // リング獲得数
+    private var _pasttime:Int   = 0; // 経過時間
+    private var _comboMax:Int   = 0; // 最大コンボ数
+    private var _speedMax:Float = 0; // 最大スピード
 
     /**
 	 * 生成
@@ -107,11 +107,11 @@ class PlayState extends FlxState {
         _back = new FlxSprite(0, 0);
         _back.loadGraphic("assets/images/back.png");
         _back.scrollFactor.set(0, 0);
-        add(_back);
+        this.add(_back);
         _back2 = new FlxSprite(FlxG.width, 0);
         _back2.loadGraphic("assets/images/back.png");
         _back2.scrollFactor.set(0, 0);
-        add(_back2);
+        this.add(_back2);
 
         // マップ読み込み
         _tmx = new TmxLoader();
@@ -120,13 +120,13 @@ class PlayState extends FlxState {
 
         // ゲームオブジェクト生成
         _player = new Player(32, FlxG.height/2);
-        add(_player);
+        this.add(_player);
         _follow = new FlxSprite(_player.x+FlxG.width/2, _player.y);
         _follow.visible = false;
-        add(_follow);
+        this.add(_follow);
         _barHp = new FlxBar(0, 0, FlxBar.FILL_LEFT_TO_RIGHT, 32, 2);
         _barHp.visible = false;
-        add(_barHp);
+        this.add(_barHp);
         _player.setHpBar(_barHp);
 
         // リング
@@ -134,14 +134,14 @@ class PlayState extends FlxState {
         for(i in 0..._rings.maxSize) {
             _rings.add(new Ring());
         }
-        add(_rings);
+        this.add(_rings);
 
         // ブロック
         _blocks = new FlxTypedGroup<Block>(512);
         for(i in 0..._blocks.maxSize) {
             _blocks.add(new Block());
         }
-        add(_blocks);
+        this.add(_blocks);
 
         // エフェクト
         _eftPlayer = new FlxSprite();
@@ -149,7 +149,7 @@ class PlayState extends FlxState {
         _eftPlayer.animation.add("blue", [0]);
         _eftPlayer.animation.add("red", [1]);
         _eftPlayer.kill();
-        add(_eftPlayer);
+        this.add(_eftPlayer);
 
         // 開始エフェクト
         _eftStart = new FlxSprite(FlxG.width/2-16, FlxG.height/2-16);
@@ -157,16 +157,16 @@ class PlayState extends FlxState {
         _eftStart.scrollFactor.set(0, 0);
         _eftStart.scale.set(2, 2);
         FlxTween.tween(_eftStart.scale, {x:1, y:1}, TIMER_START, { ease: FlxEase.expoOut, complete:_cbStart});
-        add(_eftStart);
+        this.add(_eftStart);
         _tStart = 0;
 
         // パーティクル
         _emitterBlockBlue = new EmitterBlockBlue();
         _emitterBlockRed = new EmitterBlockRed();
         _emitterPlayer = new EmitterPlayer();
-        add(_emitterBlockBlue);
-        add(_emitterBlockRed);
-        add(_emitterPlayer);
+        this.add(_emitterBlockBlue);
+        this.add(_emitterBlockRed);
+        this.add(_emitterPlayer);
 
         // テキスト
         _txtMessage = new FlxText(0, FlxG.height/2-12, FlxG.width);
@@ -174,7 +174,7 @@ class PlayState extends FlxState {
         _txtMessage.alignment = "center";
         _txtMessage.visible = false;
         _txtMessage.scrollFactor.set(0, 0);
-        add(_txtMessage);
+        this.add(_txtMessage);
 
         // 変数初期化
         _state = State.Start;
@@ -189,7 +189,7 @@ class PlayState extends FlxState {
 
         // HUD
         _hud = new HUD(_player, width, SPEED_MAX);
-        add(_hud);
+        this.add(_hud);
 
         // デバッグ用
         FlxG.debugger.toggleKeys = ["ALT"];
@@ -329,6 +329,15 @@ class PlayState extends FlxState {
         _follow.x = _player.x + FlxG.width/2 - dx;
     }
 
+    private function _addSpeed(v:Float) {
+        _speed += v;
+
+        if(_speed > _speedMax) {
+            // 最大スピード更新
+            _speedMax = _speed;
+        }
+    }
+
     /**
      * 各種スクロール処理
      **/
@@ -340,7 +349,7 @@ class PlayState extends FlxState {
         else {
             if(_speed < SPEED_DEFAULT_MAX) {
                 // デフォルトのスクロール速度上昇
-                _speed += SPEED_ADD_DEFAULT;
+                _addSpeed(SPEED_ADD_DEFAULT);
             }
         }
 
@@ -475,6 +484,7 @@ class PlayState extends FlxState {
         _timer--;
         if(_timer < 1) {
             _state = State.StageClearMain;
+            _startResult();
         }
     }
     private function _updateStageClearMain():Void {
@@ -487,12 +497,23 @@ class PlayState extends FlxState {
     }
 
     /**
+     * リザルトの表示開始
+     **/
+    private function _startResult():Void {
+        var hp = Math.floor(100 * _player.getHpRatio());
+        var pasttime:Int = 123456;
+        _result = new ResultHUD(_cntRing, _cntBlock, _comboMax, hp, pasttime, _speedMax);
+        this.add(_result);
+    }
+
+    /**
      * ゲームオーバー
      **/
     private function _updateGameoverInit():Void {
         _timer--;
         if(_timer < 1) {
             _state = State.GameoverMain;
+            _startResult();
         }
     }
     private function _updateGameoverMain():Void {
@@ -522,7 +543,7 @@ class PlayState extends FlxState {
 
         if(p.getAttribute() == b.getAttribute()) {
             // スピードアップ
-            _speed += SPEED_ADD;
+            _addSpeed(SPEED_ADD);
             // HP回復
             _player.addHp();
             // コンボ数アップ
