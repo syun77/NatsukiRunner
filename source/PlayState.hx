@@ -279,7 +279,7 @@ class PlayState extends FlxState {
         _timer = _tChangeWait;
 
         // 停止タイマーを減らす
-        _tChangeWait -= TIMER_CHANGE_WAIT;
+        _tChangeWait -= TIMER_CHANGE_WAIT_DEC;
         if(_tChangeWait < TIMER_CHANGE_WAIT_MIN) {
             // 最低値チェック
             _tChangeWait = TIMER_CHANGE_WAIT_MIN;
