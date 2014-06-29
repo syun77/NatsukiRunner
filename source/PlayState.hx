@@ -264,7 +264,6 @@ class PlayState extends FlxState {
 
     private function _setActiveAll(b:Bool):Void {
         _follow.active = b;
-        _player.active = b;
         _blocks.active = b;
         _rings.active = b;
     }
@@ -288,6 +287,8 @@ class PlayState extends FlxState {
         _eftPlayer.scale.set(1, 1);
 
         _setActiveAll(false);
+        // プレイヤーだけ止めずに速度だけ0にする
+        _player.velocity.x = 0;
     }
 
     /**

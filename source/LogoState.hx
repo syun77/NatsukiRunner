@@ -4,8 +4,6 @@ import flixel.util.FlxSpriteUtil;
 import flixel.FlxG;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
-import flixel.effects.FlxSpriteFilter;
-import flash.filters.BlurFilter;
 import flixel.FlxSprite;
 import flixel.FlxState;
 
