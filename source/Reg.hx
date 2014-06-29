@@ -9,6 +9,7 @@ import flixel.FlxG;
 class Reg {
     // BGM無効フラグ
     private static var _bBgmDisable = true;
+//    private static var _bBgmDisable = false;
 
     // レベル
 	public static var level:Int = 2;
