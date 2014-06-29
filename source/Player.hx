@@ -15,7 +15,7 @@ class Player extends FlxSprite {
     private static inline var MOVE_REVISE = 5;
     private static inline var HP_MAX = 100;
     private static inline var HP_RECOVER = 1; // デフォルトのHP回復量
-    private static inline var TIMER_DAMAGE = 60;
+    private static inline var TIMER_DAMAGE = 30;
     private static inline var DAMAGE_INIT = 2; // 初期ダメージ
     private static inline var DAMAGE_MAX = 40; // 最大ダメージ
     private static inline var DAMAGE_CNT = 28; // 最大ダメージに到達するまでの連続ヒット数

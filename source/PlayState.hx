@@ -497,7 +497,9 @@ class PlayState extends FlxState {
             // サウンド再生
             FlxG.sound.play("kya");
             FlxG.sound.play("dead");
-            FlxG.sound.music.stop();
+            if(FlxG.sound.music != null) {
+                FlxG.sound.music.stop();
+            }
             return;
         }
 
