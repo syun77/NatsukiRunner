@@ -43,6 +43,7 @@ class PlayState extends FlxState {
     private static inline var SPEED_ADD_DEFAULT:Float = 0.3; // デフォルトでの速度上昇
     private static inline var SPEED_DEFAULT_MAX:Float = 100; // デフォルトでの速度上昇制限
     private static inline var SPEED_MAX:Float = 384; // 最大速度
+    private static inline var SPEED_FRICTION_MIN:Float = 200; // 摩擦による最低速度
 
     // タイマー
     private static inline var TIMER_STAGE_CLEAR_INIT = 30;
@@ -50,6 +51,7 @@ class PlayState extends FlxState {
     private static inline var TIMER_CHANGE_WAIT = 100;
     private static inline var TIMER_DAMAGE = 30;
     private static inline var TIMER_START:Float = 0.75;
+    private static inline var TIMER_FRICTION:Int = 30; // 摩擦タイマー
 
     // ゲームオブジェクト
     private var _player:Player;
@@ -89,6 +91,7 @@ class PlayState extends FlxState {
     private var _scrollX:Float = 0; // スクロール
     private var _tDamage:Int   = 0; // ダメージによるペナルティ時間
     private var _combo:Int     = 0; // コンボ数
+    private var _tFriction:Int = 0; // 摩擦タイマー
 
     // リザルト用変数
     private var _cntBlock:Int   = 0; // ブロック破壊数
@@ -429,6 +432,17 @@ class PlayState extends FlxState {
      **/
     private function _updateMain():Void {
 
+        // 摩擦タイマー更新
+        if(_tFriction > 0) {
+            _tFriction--;
+        }
+        else {
+            // 速度減少
+            if(_speed > SPEED_FRICTION_MIN) {
+                _speed -= 0.2;
+            }
+        }
+
         // スクロール処理
         _updateScroll();
 
@@ -550,6 +564,8 @@ class PlayState extends FlxState {
             _player.addHp();
             // コンボ数アップ
             _addCombo();
+            // 摩擦タイマーをリセット
+            _tFriction = TIMER_FRICTION;
         }
         else {
             // ペナルティ
