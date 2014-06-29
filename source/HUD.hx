@@ -18,6 +18,11 @@ class HUD extends FlxGroup {
     private var _player:Player;
     private var _txtCombo:FlxText;
     private var _txtCombo2:FlxText;
+    private var _txtTime:FlxText;
+
+    // 経過時間
+    private var _pastTime:Float = 0;
+    private var _bIncTime:Bool = false; // 経過時間の増加フラグ
 
     // ゲージ
     private var _barSpeed:FlxBar;
@@ -52,7 +57,9 @@ class HUD extends FlxGroup {
         _txtDistance = new FlxText(x, y2, width);
         y2 += dy;
         _barDistance = new FlxBar(x, y2-2, FlxBar.FILL_LEFT_TO_RIGHT, cast FlxG.width/3, 2);
-        _txtLevel = new FlxText(-8, y2, width);
+        _txtTime = new FlxText(x, y2, width);
+        _txtTime.text = "Time: 0:00:000";
+        _txtLevel = new FlxText(-8, y2+dy, width);
         _txtLevel.text = Reg.getLevelName();
         _txtLevel.alignment = "right";
         _txtCombo = new FlxText(FlxG.width-72, FlxG.height-56, 64);
@@ -63,6 +70,7 @@ class HUD extends FlxGroup {
 
         _objs.push(_barSpeed);
         _objs.push(_barDistance);
+        _objs.push(_txtTime);
         _objs.push(_txtSpeed);
         _objs.push(_txtDistance);
         _objs.push(_txtLevel);
@@ -73,6 +81,33 @@ class HUD extends FlxGroup {
             // スクロール無効
             o.scrollFactor.set(0, 0);
             add(o);
+        }
+    }
+
+    /**
+     * タイマー開始フラグを設定
+     **/
+    public function setIncTime(b:Bool):Void {
+        _bIncTime = b;
+    }
+
+    /**
+     * 経過時間を取得
+     **/
+    public function getPastTime():Int {
+        return cast _pastTime;
+    }
+
+    override public function update():Void {
+
+        if(_bIncTime) {
+            // 経過時間の更新
+            _pastTime += FlxG.elapsed * 1000;
+            var time = Math.floor(_pastTime);
+            var msec = time%1000;
+            var sec = Math.floor(time/1000);
+            var min = Math.floor(time/1000/60);
+            _txtTime.text = "Time: " + min + ":" + TextUtil.fillZero(sec, 2) + ":" + TextUtil.fillZero(msec, 3);
         }
     }
 

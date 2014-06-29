@@ -110,7 +110,13 @@ class ResultHUD extends FlxGroup {
         y += dy;
         _txtCombo = new FlxText(x, y, w, "Max Combo: " + comboMax + SCORE_STR + scCombo);
         y += dy;
-        _txtTime = new FlxText(x, y, w,  "Time: " + pasttime + SCORE_STR + scTime);
+        {
+            var msec = pasttime%1000;
+            var sec = Math.floor(pasttime/1000)%60;
+            var min = Math.floor(pasttime/1000/60);
+            var time = "Time: " + min + ":" + sec + ":" + msec;
+            _txtTime = new FlxText(x, y, w, time + SCORE_STR + scTime);
+        }
         y += dy;
         _txtHp = new FlxText(x, y, w,    "HP: " + hp + SCORE_STR + scHp);
         y += dy;

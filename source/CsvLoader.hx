@@ -8,6 +8,7 @@ import openfl.Assets;
  **/
 class CsvLoader {
 
+    private var _filepath:String = "";
     private var _header: Array<String>;
     private var _types: Array<String>;
     private var _datas: Map<Int, Map<String, String>>;
@@ -26,6 +27,7 @@ class CsvLoader {
             FlxG.log.warn("CsvLoader.load() text is null. file:'" + filepath + "''");
             return;
         }
+        _filepath = filepath;
         var row = 0;
         for(line in text.split("\n")) {
             if(line == "") { continue; }
@@ -109,6 +111,7 @@ class CsvLoader {
         return Std.parseInt(getString(id, key));
     }
     public function dump():Void {
+        trace("<CSVLoader> file='"+_filepath + "'");
         var str = "";
         for(s in _header) {
             str += s + ",";

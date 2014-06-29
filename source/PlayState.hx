@@ -408,6 +408,8 @@ class PlayState extends FlxState {
                 _tStart++;
                 // ゲーム開始
                 _state = State.Main;
+                // 時間計測開始
+                _hud.setIncTime(true);
             case 3:
                 FlxTween.tween(_eftStart.scale, {x:0.25, y:4}, 0.1, { ease: FlxEase.expoInOut, complete:_cbStart});
                 _tStart++;
@@ -453,6 +455,8 @@ class PlayState extends FlxState {
             _timer = TIMER_STAGE_CLEAR_INIT;
             _txtMessage.text = "Stage Clear!";
             _txtMessage.visible = true;
+            // 時間計測停止
+            _hud.setIncTime(false);
             return;
         }
         if(_player.isDead()) {
@@ -471,6 +475,8 @@ class PlayState extends FlxState {
             // メッセージ表示
             _txtMessage.text = "Game Over...";
             _txtMessage.visible = true;
+            // 時間計測停止
+            _hud.setIncTime(false);
             return;
         }
 
@@ -517,7 +523,7 @@ class PlayState extends FlxState {
      **/
     private function _startResult():Void {
         var hp = Math.floor(100 * _player.getHpRatio());
-        var pasttime:Int = 123456;
+        var pasttime:Int = _hud.getPastTime();
         _result = new ResultHUD(_cntRing, _cntBlock, _comboMax, hp, pasttime, _speedMax);
         this.add(_result);
     }
