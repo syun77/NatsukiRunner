@@ -49,7 +49,9 @@ class PlayState extends FlxState {
     // タイマー
     private static inline var TIMER_STAGE_CLEAR_INIT = 30;
     private static inline var TIMER_GAMEOVER_INIT = 30;
-    private static inline var TIMER_CHANGE_WAIT = 100;
+    private static inline var TIMER_CHANGE_WAIT = 100; // リング獲得時の停止タイマー
+    private static inline var TIMER_CHANGE_WAIT_DEC = 3; // リング獲得時の停止タイマーの減少量
+    private static inline var TIMER_CHANGE_WAIT_MIN = 4; // リング獲得時の停止タイマーの最低値
     private static inline var TIMER_DAMAGE = 30;
     private static inline var TIMER_START:Float = 0.75;
     private static inline var TIMER_FRICTION:Int = 30; // 摩擦タイマー
@@ -93,6 +95,7 @@ class PlayState extends FlxState {
     private var _tDamage:Int   = 0; // ダメージによるペナルティ時間
     private var _combo:Int     = 0; // コンボ数
     private var _tFriction:Int = 0; // 摩擦タイマー
+    private var _tChangeWait:Int = TIMER_CHANGE_WAIT; // リング獲得時の停止タイマー
 
     // リザルト用変数
     private var _cntBlock:Int   = 0; // ブロック破壊数
@@ -273,7 +276,15 @@ class PlayState extends FlxState {
      **/
     private function _startChangeWait():Void {
         _state = State.ChangeWait;
-        _timer = TIMER_CHANGE_WAIT;
+        _timer = _tChangeWait;
+
+        // 停止タイマーを減らす
+        _tChangeWait -= TIMER_CHANGE_WAIT;
+        if(_tChangeWait < TIMER_CHANGE_WAIT_MIN) {
+            // 最低値チェック
+            _tChangeWait = TIMER_CHANGE_WAIT_MIN;
+        }
+
         _eftPlayer.revive();
         if(_player.getAttribute() == Attribute.Red) {
             _eftPlayer.animation.play("red");
