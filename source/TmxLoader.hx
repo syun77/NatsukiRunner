@@ -33,7 +33,7 @@ class TmxLoader {
         _properties = new Map<String, String>();
 
         var tmx:String = Assets.getText(filepath);
-        if(tmx != null) {
+        if(tmx == null) {
             // 読み込み失敗
             FlxG.log.warn("TmxLoader.load() tmx is null. file:'" + filepath + "''");
             return;

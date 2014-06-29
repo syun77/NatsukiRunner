@@ -130,7 +130,7 @@ class PlayState extends FlxState {
         _player.setHpBar(_barHp);
 
         // リング
-        _rings = new FlxTypedGroup<Ring>(8);
+        _rings = new FlxTypedGroup<Ring>(32);
         for(i in 0..._rings.maxSize) {
             _rings.add(new Ring());
         }

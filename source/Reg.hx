@@ -7,7 +7,7 @@ package;
  */
 class Reg {
     // レベル
-	public static var level:Int = 1;
+	public static var level:Int = 2;
     // スコア
 	public static var score:Int = 0;
     // ハイスコア
