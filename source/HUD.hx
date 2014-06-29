@@ -55,16 +55,17 @@ class HUD extends FlxGroup {
         y1 += dy;
         _barSpeed = new FlxBar(x, y1-2, FlxBar.FILL_LEFT_TO_RIGHT, cast FlxG.width/3, 2);
         _txtDistance = new FlxText(x, y2, width);
+        _txtLevel = new FlxText(-8, y1-24, width);
+        _txtLevel.text = Reg.getLevelName();
         y2 += dy;
         _barDistance = new FlxBar(x, y2-2, FlxBar.FILL_LEFT_TO_RIGHT, cast FlxG.width/3, 2);
         _txtTime = new FlxText(x, y2, width);
         _txtTime.text = "Time: 0:00:000";
-        _txtLevel = new FlxText(-8, y2+dy, width);
-        _txtLevel.text = Reg.getLevelName();
+        y2 += dy;
         _txtLevel.alignment = "right";
-        _txtCombo = new FlxText(FlxG.width-72, FlxG.height-56, 64);
+        _txtCombo = new FlxText(FlxG.width-72, y2, 64);
         _txtCombo.alignment = "center";
-        _txtCombo2 = new FlxText(FlxG.width-56, FlxG.height-32, 80);
+        _txtCombo2 = new FlxText(FlxG.width-56, y2+24, 80);
         _txtCombo2.text = "combo";
         _txtCombo2.visible = false;
 

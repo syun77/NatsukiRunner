@@ -118,7 +118,7 @@ class ResultHUD extends FlxGroup {
             _txtTime = new FlxText(x, y, w, time + SCORE_STR + scTime);
         }
         y += dy;
-        _txtHp = new FlxText(x, y, w,    "HP: " + hp + SCORE_STR + scHp);
+        _txtHp = new FlxText(x, y, w,    "HP: " + hp + "%" + SCORE_STR + scHp);
         y += dy;
 
         // トータル
