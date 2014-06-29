@@ -29,13 +29,11 @@ class MenuState extends FlxState {
     override public function create():Void {
         super.create();
 
-        Reg.cacheMusic();
-
         // テキスト
         var _txtTitle = new FlxText(0, 64, FlxG.width);
         _txtTitle.size = 24;
         _txtTitle.alignment = "center";
-        _txtTitle.text = "Natsuki Runner";
+        _txtTitle.text = "Natsuki Boost3";
         _txtPress = new FlxText(0, FlxG.height/2+36, FlxG.width);
         _txtPress.size = 16;
         _txtPress.alignment = "center";

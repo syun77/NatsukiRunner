@@ -7,6 +7,9 @@ package;
  */
 import flixel.FlxG;
 class Reg {
+    // BGM無効フラグ
+    private static var _bBgmDisable = true;
+
     // レベル
 	public static var level:Int = 2;
     // スコア
@@ -32,9 +35,16 @@ class Reg {
         FlxG.sound.cache("001");
         FlxG.sound.cache("002");
         FlxG.sound.cache("003");
+        FlxG.sound.cache("gameover");
     }
 
     public static function playMusic(name:String, bLoop:Bool=true):Void {
+
+        if(_bBgmDisable) {
+            // BGM無効
+            return;
+        }
+
         var sound = FlxG.sound.cache(name);
         if(sound != null) {
             FlxG.sound.playMusic(sound, 1, bLoop);
