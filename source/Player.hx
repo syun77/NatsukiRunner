@@ -224,6 +224,10 @@ class Player extends FlxSprite {
             var val = v + diff * _cntHit;
             _hp -= val;
             _cntHit++;
+            // 連続ダメージでは死なない
+            if(_hp < 0) {
+                _hp = 1;
+            }
         }
         else {
             // 初期ダメージ
