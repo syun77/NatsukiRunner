@@ -22,11 +22,14 @@ class MenuState extends FlxState {
     private var _state:State = State.Main;
     private var _bDecide:Bool = false;
     private var _btnList:Array<FlxButton>;
+
     /**
 	 * 生成
 	 */
     override public function create():Void {
         super.create();
+
+        Reg.cacheMusic();
 
         // テキスト
         var _txtTitle = new FlxText(0, 64, FlxG.width);

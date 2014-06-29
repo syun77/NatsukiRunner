@@ -5,6 +5,7 @@ package;
  * references to objects and other things for quick-access. Feel
  * free to simply ignore it or change it in any way you like.
  */
+import flixel.FlxG;
 class Reg {
     // レベル
 	public static var level:Int = 2;
@@ -22,6 +23,24 @@ class Reg {
             case 2: return "Normal";
             case 3: return "Hard";
             default: return "None";
+        }
+    }
+
+    public static function cacheMusic():Void {
+        FlxG.sound.volume = 1;
+
+        FlxG.sound.cache("001");
+        FlxG.sound.cache("002");
+        FlxG.sound.cache("003");
+    }
+
+    public static function playMusic(name:String, bLoop:Bool=true):Void {
+        var sound = FlxG.sound.cache(name);
+        if(sound != null) {
+            FlxG.sound.playMusic(sound, 1, bLoop);
+        }
+        else {
+            FlxG.sound.playMusic(name, 1, bLoop);
         }
     }
 }

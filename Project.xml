@@ -36,8 +36,42 @@
 	<set name="BUILD_DIR" value="export" />
 	<classpath name="source" />
 	<assets path="assets" />
-	
-	<!--------------------------------LIBRARIES------------------------------------->
+    <assets path="assets/music" if="flash" exclude="ogg">
+        <sound path="trance003.mp3" id="001" />
+        <sound path="trance002.mp3" id="002" />
+        <sound path="trance002.mp3" id="003" />
+        <sound path="gameover.mp3" id="gameover" />
+    </assets>
+    <assets path="assets/sounds" if="flash" exclude="ogg">
+        <sound path="1.mp3" id="1" />
+        <sound path="2.mp3" id="2" />
+        <sound path="3.mp3" id="3" />
+        <sound path="dead.mp3" id="dead" />
+        <sound path="gan.mp3" id="block" />
+        <sound path="go.mp3" id="go" />
+        <sound path="kin.mp3" id="kin" />
+        <sound path="kya.mp3" id="kya" />
+    </assets>
+
+    <assets path="assets/music" unless="flash">
+        <sound path="trance003.ogg" id="001" />
+        <sound path="trance002.ogg" id="002" />
+        <sound path="trance002.ogg" id="003" />
+        <sound path="gameover.ogg" id="gameover" />
+    </assets>
+    <assets path="assets/sounds" unless="flash">
+        <sound path="1.ogg" id="1" />
+        <sound path="2.ogg" id="2" />
+        <sound path="3.ogg" id="3" />
+        <sound path="dead.ogg" id="dead" />
+        <sound path="gan.ogg" id="block" />
+        <sound path="go.ogg" id="go" />
+        <sound path="kin.ogg" id="kin" />
+        <sound path="kya.ogg" id="kya" />
+    </assets>
+
+
+    <!--------------------------------LIBRARIES------------------------------------->
 
 	<haxelib name="flixel"/>
 	<haxelib name="spinehx"/>

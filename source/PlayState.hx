@@ -1,5 +1,6 @@
 package;
 
+import flixel.system.FlxSound;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
@@ -100,6 +101,10 @@ class PlayState extends FlxState {
     private var _comboMax:Int   = 0; // 最大コンボ数
     private var _speedMax:Float = 0; // 最大スピード
 
+    // サウンド
+    private var _seBlock:FlxSound = null;
+    private var _seBlockPrev:Float = 0;
+
     /**
 	 * 生成
 	 */
@@ -161,6 +166,7 @@ class PlayState extends FlxState {
         _eftStart.scale.set(2, 2);
         FlxTween.tween(_eftStart.scale, {x:1, y:1}, TIMER_START, { ease: FlxEase.expoOut, complete:_cbStart});
         this.add(_eftStart);
+        FlxG.sound.play("3");
         _tStart = 0;
 
         // パーティクル
@@ -270,6 +276,12 @@ class PlayState extends FlxState {
         _state = State.ChangeWait;
         _timer = TIMER_CHANGE_WAIT;
         _eftPlayer.revive();
+        if(_player.getAttribute() == Attribute.Red) {
+            _eftPlayer.animation.play("red");
+        }
+        else {
+            _eftPlayer.animation.play("blue");
+        }
         _eftPlayer.x = _player.x;
         _eftPlayer.y = _player.y;
         _eftPlayer.alpha = 1;
@@ -391,16 +403,20 @@ class PlayState extends FlxState {
     private function _cbStart(tween:FlxTween):Void {
         switch(_tStart) {
             case 0:
+                FlxG.sound.play("2");
                 _eftStart.scale.set(2, 2);
                 _eftStart.loadGraphic("assets/images/start/2.png");
                 FlxTween.tween(_eftStart.scale, {x:1, y:1}, TIMER_START, { ease: FlxEase.expoOut, complete:_cbStart});
                 _tStart++;
             case 1:
+                FlxG.sound.play("1");
                 _eftStart.scale.set(2, 2);
                 _eftStart.loadGraphic("assets/images/start/1.png");
                 FlxTween.tween(_eftStart.scale, {x:1, y:1}, TIMER_START, { ease: FlxEase.expoOut, complete:_cbStart});
                 _tStart++;
             case 2:
+                FlxG.sound.play("go");
+                Reg.playMusic(TextUtil.fillZero(Reg.level, 3));
                 _eftStart.scale.set(2, 2);
                 _eftStart.loadGraphic("assets/images/start/go.png");
                 _eftStart.x -= 16;
@@ -477,6 +493,11 @@ class PlayState extends FlxState {
             _txtMessage.visible = true;
             // 時間計測停止
             _hud.setIncTime(false);
+
+            // サウンド再生
+            FlxG.sound.play("kya");
+            FlxG.sound.play("dead");
+            FlxG.sound.music.stop();
             return;
         }
 
@@ -526,6 +547,7 @@ class PlayState extends FlxState {
         var pasttime:Int = _hud.getPastTime();
         _result = new ResultHUD(_cntRing, _cntBlock, _comboMax, hp, pasttime, _speedMax);
         this.add(_result);
+        Reg.playMusic("gameover", false);
     }
 
     /**
@@ -552,6 +574,8 @@ class PlayState extends FlxState {
             p.changeAttribute(v.getAttribute());
         }
         v.vanish();
+
+        FlxG.sound.play("kin");
 
         // リング獲得数アップ
         _cntRing++;
@@ -585,6 +609,14 @@ class PlayState extends FlxState {
             _player.damage();
             // コンボ終了
             _resetCombo();
+
+            if(_hud.getPastTime() - _seBlockPrev > 20 ) {
+                if(_seBlock != null) {
+                    _seBlock.kill();
+                }
+                _seBlock = FlxG.sound.play("block");
+                _seBlockPrev = _hud.getPastTime();
+            }
         }
 
         if(b.getAttribute() == Attribute.Red) {
@@ -594,6 +626,8 @@ class PlayState extends FlxState {
             _emitterBlockBlue.explode(b.x, b.y);
         }
         b.vanish();
+
+
 
         // ブロック破壊数アップ
         _cntBlock++;
