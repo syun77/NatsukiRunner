@@ -109,6 +109,9 @@ class Player extends FlxSprite {
 #else
         var dx:Float = 0;
         var dy:Float = 0;
+
+        // マルチタッチは無効
+        /*
         for(touch in FlxG.touches.list) {
             if(touch.justPressed) {
                 // タッチIDを格納
@@ -136,6 +139,31 @@ class Player extends FlxSprite {
             _touchStartX = tx;
             _touchStartY = ty;
         }
+        */
+        // 無効化ここまで
+
+        // シングルタッチのみ
+        if(FlxG.mouse.justPressed) {
+            // タッチ開始座標を保存する
+            var p = FlxG.mouse.getWorldPosition();
+            _touchStartX = p.x;
+            _touchStartY = p.y;
+        }
+        else if(FlxG.mouse.pressed) {
+            var p = FlxG.mouse.getWorldPosition();
+            var dx2 = p.x - _touchStartX;
+            var dy2 = p.y - _touchStartY;
+            dx2 *= FlxG.updateFramerate * 0.2;
+            dy2 *= FlxG.updateFramerate * 0.2;
+            dx = velocity.x + dx2;
+            dy = velocity.y + dy2;
+            dx *= 0.9;
+            dy *= 0.9;
+
+            _touchStartX = p.x;
+            _touchStartY = p.y;
+        }
+        // シングルタッチ処理はここまで
 #end
 //        velocity.set(dx, dy);
         velocity.y = dy;
