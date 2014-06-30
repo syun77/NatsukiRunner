@@ -126,7 +126,7 @@ class PlayState extends FlxState {
 
         // マップ読み込み
         _tmx = new TmxLoader();
-        var fTmx = "assets/levels/" + TextUtil.fillZero(Reg.level, 3) + ".tmx";
+        var fTmx = "assets/levels/" + Reg.getLevelString() + ".tmx";
         _tmx.load(fTmx);
 
         // ゲームオブジェクト生成

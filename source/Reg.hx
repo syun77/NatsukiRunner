@@ -30,6 +30,15 @@ class Reg {
         }
     }
 
+    /**
+     * レベル数値を文字列に変換する
+     **/
+    public static function getLevelString():String {
+
+        // 3桁の0埋めの数値
+        return TextUtil.fillZero(level, 3);
+    }
+
     public static function cacheMusic():Void {
         FlxG.sound.volume = 1;
 

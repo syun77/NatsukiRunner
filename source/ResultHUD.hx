@@ -50,9 +50,10 @@ class ResultHUD extends FlxGroup {
         pasttime:Int,
         speedMax:Float
     ) {
-        // CSVロード
-        var csv:CsvLoader = new CsvLoader();
-        csv.load("assets/levels/" + TextUtil.fillZero(Reg.level, 3) + ".csv");
+
+        // 時間スコアCSVロード
+        var csvTime:CsvLoader = new CsvLoader();
+        csvTime.load("assets/levels/" + Reg.getLevelString() + "_time.csv");
 
         // スコア計算
         var scBlock = 10 * cntBlock;
@@ -60,12 +61,25 @@ class ResultHUD extends FlxGroup {
         var scSpeed = 10 * Math.floor(speedMax);
         var scCombo = 50 * comboMax;
         var scTime  = 0;
+        var t:Int = cast(pasttime / 1000); // msecからsecに変換
+        for(i in 1...csvTime.size()) {
+            var sec = csvTime.getInt(i, "sec");
+            if(t <= sec) {
+                // スコア決定
+                scTime = csvTime.getInt(i, "score");
+            }
+        }
         var scHp    = Math.floor(hp * hp * 0.5 / 10) * 10;
         if(hp == 100) {
             // HP最大ボーナス
             scHp = 10000;
         }
         var scTotal = scBlock + scRing + scSpeed + scCombo + scTime + scHp;
+
+
+        // ランクCSVロード
+        var csv:CsvLoader = new CsvLoader();
+        csv.load("assets/levels/" + Reg.getLevelString() + ".csv");
 
         var rank = "S";
         // ランク判定
