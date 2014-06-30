@@ -589,6 +589,10 @@ class PlayState extends FlxState {
         }
         v.vanish();
 
+        // 同じX座標にあるリングを削除
+        // TODO: 消滅演出
+        _vanishRingX(v.x);
+
         FlxG.sound.play("kin");
 
         // リング獲得数アップ
@@ -689,6 +693,21 @@ class PlayState extends FlxState {
             return true;
         }
         return false;
+    }
+
+    /**
+     * X座標が一致するリングを消す
+     * @param x 検索するX座標
+     **/
+    private function _vanishRingX(x:Float):Void {
+
+        var check = function(r:Ring) {
+            if(r.x == x) {
+                r.vanish();
+            }
+        }
+
+        _rings.forEachAlive(check);
     }
 
     /**
