@@ -1,5 +1,6 @@
 package;
 
+import flixel.util.FlxColor;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.ui.FlxButton;
@@ -61,6 +62,9 @@ class MenuState extends FlxState {
         _btnList.push(_btn3);
 
         for(btn in _btnList) {
+            btn.color = FlxColor.AZURE;
+            btn.label.color = FlxColor.AQUAMARINE;
+
             add(btn);
             btn.visible = false;
         }
