@@ -51,10 +51,6 @@ class ResultHUD extends FlxGroup {
         speedMax:Float
     ) {
 
-        // 時間スコアCSVロード
-        var csvTime:CsvLoader = new CsvLoader();
-        csvTime.load("assets/levels/" + Reg.getLevelString() + "_time.csv");
-
         // スコア計算
         var scBlock = 10 * cntBlock;
         var scRing  = 100 * cntRing;
@@ -62,13 +58,29 @@ class ResultHUD extends FlxGroup {
         var scCombo = 50 * comboMax;
         var scTime  = 0;
         var t:Int = cast(pasttime / 1000); // msecからsecに変換
-        for(i in 1...csvTime.size()) {
-            var sec = csvTime.getInt(i, "sec");
-            if(t <= sec) {
-                // スコア決定
-                scTime = csvTime.getInt(i, "score");
+
+        // 時間スコアを取得
+        var getTimeScore = function() {
+
+            if(hp <= 0) { return false; }
+
+            // 時間スコアCSVロード
+            var csvTime:CsvLoader = new CsvLoader();
+            csvTime.load("assets/levels/" + Reg.getLevelString() + "_time.csv");
+
+            for(i in 1...csvTime.size()) {
+                var sec = csvTime.getInt(i, "sec");
+                if(t <= sec) {
+                    // スコア決定
+                    scTime = csvTime.getInt(i, "score");
+                    break;
+                }
             }
+            return true;
         }
+        // 有効なスコアかどうか
+        var bScTime = getTimeScore();
+
         var scHp    = Math.floor(hp * hp * 0.5 / 10) * 10;
         if(hp == 100) {
             // HP最大ボーナス
@@ -123,16 +135,24 @@ class ResultHUD extends FlxGroup {
         _txtSpeed = new FlxText(x, y, w, "Max Speed: " + Math.floor(speedMax) + SCORE_STR + scSpeed);
         y += dy;
         _txtCombo = new FlxText(x, y, w, "Max Combo: " + comboMax + SCORE_STR + scCombo);
-        y += dy;
-        {
+        if(bScTime) {
+            // 時間スコア有効
+            y += dy;
             var msec = pasttime%1000;
             var sec = Math.floor(pasttime/1000)%60;
             var min = Math.floor(pasttime/1000/60);
             var time = "Time: " + min + ":" + sec + ":" + msec;
             _txtTime = new FlxText(x, y, w, time + SCORE_STR + scTime);
+
+            // HPスコア有効
+            y += dy;
+            _txtHp = new FlxText(x, y, w,    "HP: " + hp + "%" + SCORE_STR + scHp);
         }
-        y += dy;
-        _txtHp = new FlxText(x, y, w,    "HP: " + hp + "%" + SCORE_STR + scHp);
+        else {
+            // 時間スコア無効
+            _txtTime = new FlxText();
+            _txtHp = new FlxText();
+        }
         y += dy;
 
         // トータル
