@@ -1,4 +1,5 @@
 package ;
+import flixel.util.FlxStringUtil;
 import flixel.util.FlxTimer;
 import flixel.tweens.FlxEase;
 import flixel.text.FlxText;
@@ -138,11 +139,7 @@ class ResultHUD extends FlxGroup {
         if(bScTime) {
             // 時間スコア有効
             y += dy;
-            var msec = pasttime%1000;
-            var sec = Math.floor(pasttime/1000)%60;
-            var min = Math.floor(pasttime/1000/60);
-            var time = "Time: " + min + ":" + sec + ":" + msec;
-            _txtTime = new FlxText(x, y, w, time + SCORE_STR + scTime);
+            _txtTime = new FlxText(x, y, w, FlxStringUtil.formatTime(pasttime/1000.0, true));
 
             // HPスコア有効
             y += dy;

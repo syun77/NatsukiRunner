@@ -1,4 +1,5 @@
 package ;
+import flixel.util.FlxStringUtil;
 import flixel.ui.FlxBar;
 import Math;
 import flixel.FlxObject;
@@ -60,7 +61,7 @@ class HUD extends FlxGroup {
         y2 += dy;
         _barDistance = new FlxBar(x, y2-2, FlxBar.FILL_LEFT_TO_RIGHT, cast FlxG.width/3, 2);
         _txtTime = new FlxText(x, y2, width);
-        _txtTime.text = "Time: 0:00:000";
+        _txtTime.text = "Time: " + FlxStringUtil.formatTime(0, true);
         y2 += dy;
         _txtLevel.alignment = "right";
         _txtCombo = new FlxText(FlxG.width-72, y2, 64);
@@ -104,11 +105,7 @@ class HUD extends FlxGroup {
         if(_bIncTime) {
             // 経過時間の更新
             _pastTime += FlxG.elapsed * 1000;
-            var time = Math.floor(_pastTime);
-            var msec = time%1000;
-            var sec = Math.floor(time/1000);
-            var min = Math.floor(time/1000/60);
-            _txtTime.text = "Time: " + min + ":" + TextUtil.fillZero(sec, 2) + ":" + TextUtil.fillZero(msec, 3);
+            _txtTime.text = "Time: " + FlxStringUtil.formatTime(_pastTime/1000.0, true);
         }
     }
 
