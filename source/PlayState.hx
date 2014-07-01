@@ -70,6 +70,7 @@ class PlayState extends FlxState {
     private var _emitterPlayer:EmitterPlayer;
     private var _eftStart:FlxSprite;
     private var _tStart:Int = 0;
+    private var _eftRings:FlxTypedGroup<EffectRing>;
 
     // メッセージ
     private var _txtMessage:FlxText;
@@ -171,6 +172,13 @@ class PlayState extends FlxState {
         this.add(_eftStart);
         FlxG.sound.play("3");
         _tStart = 0;
+
+        // リング消滅エフェクト
+        _eftRings = new FlxTypedGroup<EffectRing>(32);
+        for(i in 0..._eftRings.maxSize) {
+            _eftRings.add(new EffectRing());
+        }
+        this.add(_eftRings);
 
         // パーティクル
         _emitterBlockBlue = new EmitterBlockBlue();
@@ -590,7 +598,6 @@ class PlayState extends FlxState {
         v.vanish();
 
         // 同じX座標にあるリングを削除
-        // TODO: 消滅演出
         _vanishRingX(v.x);
 
         FlxG.sound.play("kin");
@@ -704,6 +711,8 @@ class PlayState extends FlxState {
         var check = function(r:Ring) {
             if(r.x == x) {
                 r.vanish();
+                var eft:EffectRing = _eftRings.recycle();
+                eft.init(r.getAttribute(), r.x, r.y);
             }
         }
 
