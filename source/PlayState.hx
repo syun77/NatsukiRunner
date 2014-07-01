@@ -734,6 +734,10 @@ class PlayState extends FlxState {
         if(FlxG.keys.justPressed.R) {
             FlxG.resetState();
         }
+        if(FlxG.keys.justPressed.E) {
+            // セーブデータ初期化
+            Reg.clear();
+        }
 
         if(FlxG.keys.pressed.RIGHT) {
             // 右キーでスピードアップ
