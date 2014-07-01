@@ -1,5 +1,6 @@
 package;
 
+import flixel.util.FlxStringUtil;
 import flixel.util.FlxColor;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
@@ -24,6 +25,8 @@ class MenuState extends FlxState {
     private var _bDecide:Bool = false;
     private var _btnList:Array<FlxButton>;
 
+    private var _texts:Array<FlxText>;
+
     /**
 	 * 生成
 	 */
@@ -43,9 +46,9 @@ class MenuState extends FlxState {
         _txtCopy.text = "(c)2014 Alpha Secret Base / 2dgames.jp";
         _txtCopy.alignment = "center";
 
-        add(_txtTitle);
-        add(_txtPress);
-        add(_txtCopy);
+        this.add(_txtTitle);
+        this.add(_txtPress);
+        this.add(_txtCopy);
 
         // ボタン
         _btnList = new Array<FlxButton>();
@@ -65,15 +68,27 @@ class MenuState extends FlxState {
             btn.color = FlxColor.AZURE;
             btn.label.color = FlxColor.AQUAMARINE;
 
-            add(btn);
+            this.add(btn);
             btn.visible = false;
         }
 
+        // ハイスコア表示
+        x += 80 + 4;
+        y = FlxG.height/2+24+4;
+        _texts = new Array<FlxText>();
         for(i in 1...4) {
-            trace("[Level] - " + i);
-            trace("hiscore: " + Reg.getHiScore(i));
-            trace("hitime: " + Reg.getTime(i));
-            trace("rank: " + Reg.getRank(i));
+            var hiscore = Reg.getHiScore(i);
+            var hitime = Reg.getTime(i);
+            var rank = Reg.getRank(i);
+
+            var txt:FlxText = new FlxText(x, y, FlxG.width);
+            txt.text = "(" + rank + ") " + hiscore + " - TIME: " + FlxStringUtil.formatTime(hitime/1000, true);
+            txt.color = FlxColor.SILVER;
+            y += dy;
+
+            txt.visible = false;
+            this.add(txt);
+            _texts.push(txt);
         }
     }
 
@@ -99,6 +114,9 @@ class MenuState extends FlxState {
                     FlxTween.tween(_txtPress, {y:FlxG.height/2}, 1, {ease:FlxEase.expoOut});
                     for(btn in _btnList) {
                         btn.visible = true;
+                    }
+                    for(txt in _texts) {
+                        txt.visible = true;
                     }
                     _state = State.Select;
                 }
