@@ -68,6 +68,13 @@ class MenuState extends FlxState {
             add(btn);
             btn.visible = false;
         }
+
+        for(i in 1...4) {
+            trace("[Level] - " + i);
+            trace("hiscore: " + Reg.getHiScore(i));
+            trace("hitime: " + Reg.getTime(i));
+            trace("rank: " + Reg.getRank(i));
+        }
     }
 
     /**

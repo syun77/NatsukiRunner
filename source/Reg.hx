@@ -10,7 +10,7 @@ import flixel.FlxG;
 class Reg {
 
     // 初期タイム
-    private static var TIME_INIT = (59 * 60 * 1000) + (59 * 1000) + 999;
+    public static var TIME_INIT = (59 * 60 * 1000) + (59 * 1000) + 999;
 
     // BGM無効フラグ
     private static var _bBgmDisable = true;
@@ -29,20 +29,35 @@ class Reg {
             _save = new FlxSave();
             _save.bind("SAVEDATA");
         }
-        if(_save.data == null) {
+        if(_save.data == null || _save.data.scores == null) {
             // データがなければ初期化
             _save.data.scores = new Array<Int>();
             _save.data.times = new Array<Int>();
+            _save.data.ranks = new Array<String>();
             for(i in 0...4) {
                 _save.data.scores.push(0);
                 _save.data.times.push(TIME_INIT);
+                _save.data.ranks.push("E");
             }
         }
 
         return _save;
     }
 
-    public static function getHiScore(lv:Int = -1):Void {
+    /**
+     * セーブデータを初期化
+     **/
+    public static function clear():Void {
+        var s = _getSave();
+        s.erase();
+    }
+
+    /**
+     * ハイスコアを取得
+     * @param lv レベル。指定がなければ現在のレベルで取得する
+     * @return ハイスコア
+     **/
+    public static function getHiScore(lv:Int = -1):Int {
         var s = _getSave();
         if(lv < 0) {
             lv = level;
@@ -51,7 +66,12 @@ class Reg {
         return s.data.scores[lv];
     }
 
-    public static function getTime(lv:Int = -1):Void {
+    /**
+     * 最短タイムを取得
+     * @param lv レベル。指定がなければ現在のレベルで取得する
+     * @return 最短タイム
+     **/
+    public static function getTime(lv:Int = -1):Int {
         var s = _getSave();
         if(lv < 0) {
             lv = level;
@@ -60,9 +80,59 @@ class Reg {
         return s.data.times[lv];
     }
 
-    public static function save():Void {
+    /**
+     * ランクを取得
+     * @param lv レベル。指定がなければ現在のレベルで取得する
+     * @return ランク
+     **/
+    public static function getRank(lv:Int = -1):String {
+        var s = _getSave();
+        if(lv < 0) {
+            lv = level;
+        }
+
+        return s.data.ranks[lv];
+    }
+
+    /**
+     * スコア更新
+     **/
+    public static function save(score:Int, time:Int, rank:String):Void {
+
         var s = _getSave();
 
+        var hiscore = getHiScore();
+        var hitime = getTime();
+        var hirank = getRank();
+
+        if(score > hiscore) {
+            // ハイスコア更新
+            s.data.scores[level] = score;
+        }
+        if(time < hitime) {
+            // 最短タイム更新
+            s.data.times[level] = time;
+        }
+
+        var rankToInt = function(rank:String) {
+            switch(rank) {
+                case "S": return 5;
+                case "A": return 4;
+                case "B": return 3;
+                case "C": return 2;
+                case "D": return 1;
+                case "E": return 0;
+                default: return 0;
+            }
+        }
+        var rankA = rankToInt(rank);
+        var rankB = rankToInt(hirank);
+        if(rankA > rankB) {
+            // ランク更新
+            s.data.ranks[level] = rank;
+        }
+
+        s.flush();
     }
 
     /**

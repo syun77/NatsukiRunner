@@ -107,7 +107,18 @@ class ResultHUD extends FlxGroup {
             }
         }
 
-        // 描画情報設定
+        // ■セーブ
+        {
+            var hitime = pasttime;
+            if(bScTime == false) {
+                // ゲームオーバー時はタイム更新なし
+                hitime = Reg.TIME_INIT;
+            }
+            Reg.save(scTotal, hitime, rank);
+        }
+
+
+        // ■描画情報設定
         super();
         _objs = new Array<FlxObject>();
 
