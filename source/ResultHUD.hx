@@ -114,7 +114,7 @@ class ResultHUD extends FlxGroup {
                 // ゲームオーバー時はタイム更新なし
                 hitime = Reg.TIME_INIT;
             }
-            Reg.save(scTotal, hitime, rank);
+            Reg.save(scTotal, hitime, rank, bScTime);
         }
 
 

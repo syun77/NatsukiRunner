@@ -29,7 +29,7 @@ class Reg {
             _save = new FlxSave();
             _save.bind("SAVEDATA");
         }
-        if(_save.data == null || _save.data.scores == null) {
+        if(_save.data == null || _save.data.scores == null || _save.data.levelMax == null) {
             // データがなければ初期化
             _save.data.scores = new Array<Int>();
             _save.data.times = new Array<Int>();
@@ -39,6 +39,7 @@ class Reg {
                 _save.data.times.push(TIME_INIT);
                 _save.data.ranks.push("E");
             }
+            _save.data.levelMax = 0;
         }
 
         return _save;
@@ -50,6 +51,15 @@ class Reg {
     public static function clear():Void {
         var s = _getSave();
         s.erase();
+        trace("SaveData erased.");
+    }
+
+    /**
+     * 最大レベルクリア数を取得する
+     * @return 最大レベルクリア数
+     **/
+    public static function getLevelMax():Int {
+        return _save.data.levelMax;
     }
 
     /**
@@ -96,8 +106,12 @@ class Reg {
 
     /**
      * スコア更新
+     * @param score  スコア
+     * @param time   経過時間
+     * @param rank   ランク
+     * @param bClear クリアしたかどうか
      **/
-    public static function save(score:Int, time:Int, rank:String):Void {
+    public static function save(score:Int, time:Int, rank:String, bClear:Bool):Void {
 
         var s = _getSave();
 
@@ -130,6 +144,13 @@ class Reg {
         if(rankA > rankB) {
             // ランク更新
             s.data.ranks[level] = rank;
+        }
+
+        if(bClear) {
+            // クリアしていたら最大レベルチェック
+            if(level > getLevelMax()) {
+                s.data.levelMax = level;
+            }
         }
 
         s.flush();

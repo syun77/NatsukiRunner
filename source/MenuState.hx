@@ -90,6 +90,8 @@ class MenuState extends FlxState {
             this.add(txt);
             _texts.push(txt);
         }
+
+        trace("levelmax = " + Reg.getLevelMax());
     }
 
     /**
