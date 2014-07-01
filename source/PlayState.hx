@@ -45,6 +45,7 @@ class PlayState extends FlxState {
     private static inline var SPEED_DEFAULT_MAX:Float = 100; // デフォルトでの速度上昇制限
     private static inline var SPEED_MAX:Float = 384; // 最大速度
     private static inline var SPEED_FRICTION_MIN:Float = 200; // 摩擦による最低速度
+    private static inline var SPEED_STOP:Float = 0.97; // 停止標識の速度の低下
 
     // タイマー
     private static inline var TIMER_STAGE_CLEAR_INIT = 30;
@@ -55,6 +56,7 @@ class PlayState extends FlxState {
     private static inline var TIMER_DAMAGE = 30;
     private static inline var TIMER_START:Float = 0.75;
     private static inline var TIMER_FRICTION:Int = 30; // 摩擦タイマー
+    private static inline var TIMER_STOP:Int = 30; // 停止タイマー
 
     // ゲームオブジェクト
     private var _player:Player;
@@ -62,6 +64,7 @@ class PlayState extends FlxState {
     private var _follow:FlxSprite;
     private var _rings:FlxTypedGroup<Ring>;
     private var _blocks:FlxTypedGroup<Block>;
+    private var _stopSigns:FlxTypedGroup<StopSign>;
 
     // エフェクト
     private var _eftPlayer:FlxSprite;
@@ -97,6 +100,7 @@ class PlayState extends FlxState {
     private var _combo:Int     = 0; // コンボ数
     private var _tFriction:Int = 0; // 摩擦タイマー
     private var _tChangeWait:Int = TIMER_CHANGE_WAIT; // リング獲得時の停止タイマー
+    private var _tStop:Int     = 0; // 停止タイマー
 
     // リザルト用変数
     private var _cntBlock:Int   = 0; // ブロック破壊数
@@ -154,6 +158,13 @@ class PlayState extends FlxState {
             _blocks.add(new Block());
         }
         this.add(_blocks);
+
+        // 停止標識
+        _stopSigns = new FlxTypedGroup<StopSign>(32);
+        for(i in 0..._stopSigns.maxSize) {
+            _stopSigns.add(new StopSign());
+        }
+        this.add(_stopSigns);
 
         // エフェクト
         _eftPlayer = new FlxSprite();
@@ -329,6 +340,13 @@ class PlayState extends FlxState {
             var r:Ring = _rings.recycle();
             r.init(type, x, y);
         }
+        // 一時停止標識の生成
+        var createStopSign = function(i, j) {
+            var x = i * _tmx.tileWidth;
+            var y = j * _tmx.tileHeight;
+            var s:StopSign = _stopSigns.recycle();
+            s.init(x, y);
+        }
 
         var layer:Layer2D = _tmx.getLayer(0);
         var px = Math.floor(FlxG.camera.scroll.x / _tmx.tileWidth);
@@ -348,6 +366,9 @@ class PlayState extends FlxState {
                         layer.set(i, j, 0);
                     case 4: // 赤リング
                         createRing(i, j, Attribute.Red);
+                        layer.set(i, j, 0);
+                    case 5: // 一時停止標識
+                        createStopSign(i, j);
                         layer.set(i, j, 0);
                 }
             }
@@ -481,6 +502,15 @@ class PlayState extends FlxState {
             }
         }
 
+        if(_tStop > 0) {
+            // 停止タイマー有効
+            _speed *= SPEED_STOP;
+            if(_speed < SPEED_START) {
+                _speed = SPEED_START;
+            }
+            _tStop--;
+        }
+
         // スクロール処理
         _updateScroll();
 
@@ -529,6 +559,7 @@ class PlayState extends FlxState {
         // 当たり判定
         FlxG.overlap(_player, _rings, _vsPlayerRing, _collideCircle);
         FlxG.overlap(_player, _blocks, _vsPlayerBlock, _collideCircleBlock);
+        FlxG.overlap(_player, _stopSigns, _vsPlayerStop, _collideCircle);
     }
 
     private function _updateChangeWait():Void {
@@ -656,6 +687,15 @@ class PlayState extends FlxState {
 
         // ブロック破壊数アップ
         _cntBlock++;
+    }
+
+    /**
+     * プレイヤ vs 停止標識
+     **/
+    private function _vsPlayerStop(p:Player, s:StopSign):Void {
+        _tStop = TIMER_STOP;
+        s.kill();
+        _emitterBlockRed.explode(s.x, s.y);
     }
 
     /**
