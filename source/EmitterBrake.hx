@@ -7,7 +7,7 @@ import flixel.effects.particles.FlxParticle;
  **/
 class EmitterBrake extends FlxEmitter {
 
-    private static inline var SPEED:Int = 200;
+    private static inline var SPEED:Int = 20;
     private static inline var SIZE:Int = 32;
 
     public function new() {
@@ -26,7 +26,7 @@ class EmitterBrake extends FlxEmitter {
     public function explode(px:Float, py:Float):Void {
         this.x = px;
         this.y = py;
-        this.start(true, 1, 0, 32, 1);
+        this.start(true, 1, 0, 1, 1);
         super.update();
     }
 }

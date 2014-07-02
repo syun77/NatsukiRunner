@@ -511,6 +511,11 @@ class PlayState extends FlxState {
                 _speed = SPEED_START;
             }
             _tStop--;
+
+            // 足もとからブレーキエフェクト生成
+            var px = _player.x+_player.width/2;
+            var py = _player.y+_player.height;
+            _emitterBrake.explode(px, py);
         }
 
         // スクロール処理
@@ -697,7 +702,6 @@ class PlayState extends FlxState {
     private function _vsPlayerStop(p:Player, s:StopSign):Void {
         _tStop = TIMER_STOP;
         s.kill();
-        _emitterBrake.explode(s.x, s.y);
     }
 
     /**
