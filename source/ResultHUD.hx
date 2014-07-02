@@ -34,6 +34,7 @@ class ResultHUD extends FlxGroup {
     private var _objs:Array<FlxObject>;
 
     private var _bEnd:Bool = false; // 演出が完了したかどうか
+    private var _bNewLevel:Bool = false; // 最大レベルを更新したかどうか
 
     /**
      * コンストラクタ
@@ -114,7 +115,7 @@ class ResultHUD extends FlxGroup {
                 // ゲームオーバー時はタイム更新なし
                 hitime = Reg.TIME_INIT;
             }
-            Reg.save(scTotal, hitime, rank, bScTime);
+            _bNewLevel = Reg.save(scTotal, hitime, rank, bScTime);
         }
 
 
@@ -236,5 +237,12 @@ class ResultHUD extends FlxGroup {
 
     public function isEnd():Bool {
         return _bEnd;
+    }
+
+    /**
+     * 最大レベルを更新したかどうか
+     **/
+    public function isNewLevel():Bool {
+        return _bNewLevel;
     }
 }

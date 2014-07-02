@@ -26,6 +26,7 @@ private enum State {
     ChangeWait;     // 色変え演出中
     StageClearInit; // ステージクリア・初期化
     StageClearMain; // ステージクリア・メイン
+    UnlockWait;     // ステージアンロック・ウィンドウ表示中
     GameoverInit;   // ゲームオーバー・初期化
     GameoverMain;   // ゲームオーバー・メイン
 }
@@ -83,6 +84,9 @@ class PlayState extends FlxState {
 
     // リザルト
     private var _result:ResultHUD;
+
+    // アンロックウィンドウ
+    private var _unlock:DialogUnlock;
 
     // マップ
     private var _tmx:TmxLoader;
@@ -278,6 +282,7 @@ class PlayState extends FlxState {
             case State.ChangeWait: _updateChangeWait();
             case State.StageClearInit: _updateStageClearInit();
             case State.StageClearMain: _updateStageClearMain();
+            case State.UnlockWait: _updateUnlockWait();
             case State.GameoverInit: _updateGameoverInit();
             case State.GameoverMain: _updateGameoverMain();
         }
@@ -595,6 +600,26 @@ class PlayState extends FlxState {
             _player.active = false;
         }
         if(FlxG.mouse.justPressed && _result.isEnd()) {
+            if(_result.isNewLevel()) {
+                // アンロックウィンドウをオープン
+                _unlock = new DialogUnlock(Reg.level+1);
+                this.add(_unlock);
+                _state = State.UnlockWait;
+            }
+            else {
+                FlxG.switchState(new MenuState());
+            }
+        }
+    }
+
+    /**
+     * アンロックウィンドウのクローズ待ち
+     **/
+    private function _updateUnlockWait():Void {
+        if(_player.x > _tmx.width * _tmx.tileWidth) {
+            _player.active = false;
+        }
+        if(_unlock.isClose()) {
             FlxG.switchState(new MenuState());
         }
     }

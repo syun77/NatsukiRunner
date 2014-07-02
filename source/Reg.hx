@@ -17,7 +17,7 @@ class Reg {
 //    private static var _bBgmDisable = false;
 
     // レベル
-	public static var level:Int = 3;
+	public static var level:Int = 1;
     // スコア
 	public static var score:Int = 0;
 
@@ -31,15 +31,7 @@ class Reg {
         }
         if(_save.data == null || _save.data.scores == null || _save.data.levelMax == null) {
             // データがなければ初期化
-            _save.data.scores = new Array<Int>();
-            _save.data.times = new Array<Int>();
-            _save.data.ranks = new Array<String>();
-            for(i in 0...4) {
-                _save.data.scores.push(0);
-                _save.data.times.push(TIME_INIT);
-                _save.data.ranks.push("E");
-            }
-            _save.data.levelMax = 0;
+            clear();
         }
 
         return _save;
@@ -50,7 +42,17 @@ class Reg {
      **/
     public static function clear():Void {
         var s = _getSave();
-        s.erase();
+
+        _save.data.scores = new Array<Int>();
+        _save.data.times = new Array<Int>();
+        _save.data.ranks = new Array<String>();
+        for(i in 0...4) {
+            _save.data.scores.push(0);
+            _save.data.times.push(TIME_INIT);
+            _save.data.ranks.push("E");
+        }
+        _save.data.levelMax = 0;
+        s.flush();
         trace("SaveData erased.");
     }
 
@@ -110,8 +112,9 @@ class Reg {
      * @param time   経過時間
      * @param rank   ランク
      * @param bClear クリアしたかどうか
+     * @return レベル更新したらtrue
      **/
-    public static function save(score:Int, time:Int, rank:String, bClear:Bool):Void {
+    public static function save(score:Int, time:Int, rank:String, bClear:Bool):Bool {
 
         var s = _getSave();
 
@@ -146,21 +149,34 @@ class Reg {
             s.data.ranks[level] = rank;
         }
 
+        var ret:Bool = false; // 新しいレベルをクリアしたかどうか
+
         if(bClear) {
             // クリアしていたら最大レベルチェック
             if(level > getLevelMax()) {
+                // クリアしたレベルを更新
                 s.data.levelMax = level;
+
+                // レベル更新
+                ret = true;
             }
         }
 
         s.flush();
+
+        return ret;
     }
 
     /**
      * 難易度に対応する名前を取得する
      **/
-    public static function getLevelName():String {
-        switch(level) {
+    public static function getLevelName(lv:Int=-1):String {
+
+        if(lv == -1) {
+            lv = level;
+        }
+
+        switch(lv) {
             case 1: return "Easy";
             case 2: return "Normal";
             case 3: return "Hard";
