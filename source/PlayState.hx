@@ -9,7 +9,6 @@ import flixel.util.FlxAngle;
 import flixel.text.FlxText;
 import flixel.util.FlxPoint;
 import Attribute;
-import Attribute;
 import flixel.util.FlxRect;
 import flixel.FlxCamera;
 import flixel.FlxSprite;
@@ -71,6 +70,7 @@ class PlayState extends FlxState {
     private var _emitterBlockBlue:EmitterBlockBlue;
     private var _emitterBlockRed:EmitterBlockRed;
     private var _emitterPlayer:EmitterPlayer;
+    private var _emitterBrake:EmitterBrake;
     private var _eftStart:FlxSprite;
     private var _tStart:Int = 0;
     private var _eftRings:FlxTypedGroup<EffectRing>;
@@ -195,9 +195,11 @@ class PlayState extends FlxState {
         _emitterBlockBlue = new EmitterBlockBlue();
         _emitterBlockRed = new EmitterBlockRed();
         _emitterPlayer = new EmitterPlayer();
+        _emitterBrake = new EmitterBrake();
         this.add(_emitterBlockBlue);
         this.add(_emitterBlockRed);
         this.add(_emitterPlayer);
+        this.add(_emitterBrake);
 
         // テキスト
         _txtMessage = new FlxText(0, FlxG.height/2-12, FlxG.width);
@@ -695,7 +697,7 @@ class PlayState extends FlxState {
     private function _vsPlayerStop(p:Player, s:StopSign):Void {
         _tStop = TIMER_STOP;
         s.kill();
-        _emitterBlockRed.explode(s.x, s.y);
+        _emitterBrake.explode(s.x, s.y);
     }
 
     /**
