@@ -727,6 +727,7 @@ class PlayState extends FlxState {
     private function _vsPlayerStop(p:Player, s:StopSign):Void {
         _tStop = TIMER_STOP;
         s.kill();
+        FlxG.sound.play("brake");
     }
 
     /**
