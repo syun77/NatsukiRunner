@@ -17,7 +17,7 @@ class Reg {
 //    private static var _bBgmDisable = false;
 
     // レベル
-	public static var level:Int = 1;
+	public static var level:Int = 3;
     // スコア
 	public static var score:Int = 0;
 
