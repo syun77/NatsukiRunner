@@ -13,11 +13,11 @@ class Reg {
     public static var TIME_INIT = (59 * 60 * 1000) + (59 * 1000) + 999;
 
     // BGM無効フラグ
-    private static var _bBgmDisable = true;
-//    private static var _bBgmDisable = false;
+//    private static var _bBgmDisable = true;
+    private static var _bBgmDisable = false;
 
     // レベル
-	public static var level:Int = 1;
+	public static var level:Int = 3;
     // スコア
 	public static var score:Int = 0;
 

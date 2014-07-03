@@ -151,7 +151,7 @@ class ResultHUD extends FlxGroup {
         if(bScTime) {
             // 時間スコア有効
             y += dy;
-            _txtTime = new FlxText(x, y, w, FlxStringUtil.formatTime(pasttime/1000.0, true));
+            _txtTime = new FlxText(x, y, w, "Time: " + FlxStringUtil.formatTime(pasttime/1000.0, true) + SCORE_STR + scTime);
 
             // HPスコア有効
             y += dy;

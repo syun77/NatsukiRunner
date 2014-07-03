@@ -129,6 +129,7 @@ class MenuState extends FlxState {
                 _txtPress.visible = _timer%64 < 48;
                 if(_bDecide) {
                     _state = State.Decide;
+                    FlxG.sound.play("push");
                 }
 
             case State.Decide:

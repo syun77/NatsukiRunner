@@ -59,6 +59,8 @@ class DialogUnlock extends FlxGroup {
             o.scrollFactor.set(0, 0);
             this.add(o);
         }
+
+        FlxG.sound.play("push");
     }
 
     /**

@@ -53,6 +53,7 @@
         <sound path="kin.mp3" id="kin" />
         <sound path="kya.mp3" id="kya" />
         <sound path="brake.mp3" id="brake" />
+        <sound path="push.mp3" id="push" />
     </assets>
 
     <assets path="assets/music" unless="flash">
@@ -71,6 +72,7 @@
         <sound path="kin.ogg" id="kin" />
         <sound path="kya.ogg" id="kya" />
         <sound path="brake.ogg" id="brake" />
+        <sound path="push.ogg" id="push" />
     </assets>
 
 

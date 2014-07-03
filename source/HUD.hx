@@ -1,4 +1,5 @@
 package ;
+import flixel.tweens.FlxTween;
 import flixel.util.FlxStringUtil;
 import flixel.ui.FlxBar;
 import Math;
@@ -34,6 +35,8 @@ class HUD extends FlxGroup {
     // ゴールまでの距離
     private var _goal:Int;
     private var _speedMax:Float;
+
+    private var _tLevel:Int = 60;
 
     /**
      * コンストラクタ
@@ -101,6 +104,11 @@ class HUD extends FlxGroup {
     }
 
     override public function update():Void {
+
+        if(_tLevel > 0) {
+            _txtLevel.visible = _tLevel%4 < 2;
+            _tLevel--;
+        }
 
         if(_bIncTime) {
             // 経過時間の更新
