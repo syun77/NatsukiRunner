@@ -17,7 +17,7 @@ class Reg {
 //    private static var _bBgmDisable = false;
 
     // レベル
-	public static var level:Int = 3;
+	public static var level:Int = 1;
     // スコア
 	public static var score:Int = 0;
 
@@ -131,6 +131,7 @@ class Reg {
             s.data.times[level] = time;
         }
 
+        // ランクを数値に変換
         var rankToInt = function(rank:String) {
             switch(rank) {
                 case "S": return 5;

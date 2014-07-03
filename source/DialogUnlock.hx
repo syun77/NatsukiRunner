@@ -36,11 +36,13 @@ class DialogUnlock extends FlxGroup {
         _frame.makeGraphic(w+4, h+4, FlxColor.SILVER);
         _window = new FlxSprite(x, y);
         _window.makeGraphic(w, h, FlxColor.NAVY_BLUE);
-        _txt = new FlxText(0, y + 20, FlxG.width);
+        _txt = new FlxText(0, y + 8, FlxG.width);
         _txt.alignment = "center";
         _txt.text = "Unlock " + Reg.getLevelName(lv) + " mode.";
-        _btn = new FlxButton(FlxG.width/2-40, y + 40, _cbOk);
+        _btn = new FlxButton(FlxG.width/2-40, y + 32, _cbOk);
         _btn.text = "OK";
+        _btn.color = FlxColor.AZURE;
+        _btn.label.color = FlxColor.AQUAMARINE;
 
         _objs.push(_frame);
         _objs.push(_window);
