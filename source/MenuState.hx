@@ -52,7 +52,9 @@ class MenuState extends FlxState {
 
         // ボタン
         _btnList = new Array<FlxButton>();
-        var x = FlxG.width/2-40;
+
+//        var x = FlxG.width/2-40;
+        var x = FlxG.width/2-80;
         var y = FlxG.height/2+24;
         var dy = 24;
         var _btn1 = new FlxButton( x, y, "EASY", _btnEasy);

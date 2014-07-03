@@ -12,6 +12,9 @@ class Reg {
     // 初期タイム
     public static var TIME_INIT = (59 * 60 * 1000) + (59 * 1000) + 999;
 
+    // レベルの最大
+    public static var LEVEL_MAX = 4;
+
     // BGM無効フラグ
     private static var _bBgmDisable = true;
 //    private static var _bBgmDisable = false;
@@ -43,13 +46,13 @@ class Reg {
     public static function clear():Void {
         var s = _getSave();
 
-        _save.data.scores = new Array<Int>();
-        _save.data.times = new Array<Int>();
-        _save.data.ranks = new Array<String>();
-        for(i in 0...4) {
-            _save.data.scores.push(0);
-            _save.data.times.push(TIME_INIT);
-            _save.data.ranks.push("E");
+        s.data.scores = new Array<Int>();
+        s.data.times = new Array<Int>();
+        s.data.ranks = new Array<String>();
+        for(i in 0...LEVEL_MAX) {
+            s.data.scores.push(0);
+            s.data.times.push(TIME_INIT);
+            s.data.ranks.push("E");
         }
         _save.data.levelMax = 0;
         s.flush();
@@ -158,8 +161,10 @@ class Reg {
                 // クリアしたレベルを更新
                 s.data.levelMax = level;
 
-                // レベル更新
-                ret = true;
+                if(level < LEVEL_MAX - 1) {
+                    // アンロック・ウィンドウ表示
+                    ret = true;
+                }
             }
         }
 
@@ -194,6 +199,9 @@ class Reg {
         return TextUtil.fillZero(level, 3);
     }
 
+    /**
+     * キャッシュする
+     **/
     public static function cacheMusic():Void {
         FlxG.sound.volume = 1;
 
@@ -212,6 +220,7 @@ class Reg {
 
         var sound = FlxG.sound.cache(name);
         if(sound != null) {
+            // キャッシュがあればキャッシュから再生
             FlxG.sound.playMusic(sound, 1, bLoop);
         }
         else {
