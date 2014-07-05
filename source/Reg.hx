@@ -45,7 +45,7 @@ class Reg {
      **/
     public static function clear(s:FlxSave=null):Void {
         if(s == null) {
-            s = new FlxSave();
+            s = _save;
         }
 
         s.data.scores = new Array<Int>();
@@ -58,7 +58,6 @@ class Reg {
         }
         _save.data.levelMax = 0;
         s.flush();
-        trace("SaveData erased.");
     }
 
     /**

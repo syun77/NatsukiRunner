@@ -795,6 +795,8 @@ class PlayState extends FlxState {
      * 更新・デバッグ
      **/
     private function _updateDebug():Void {
+
+    #if !FLX_NO_DEBUG
         if(FlxG.keys.justPressed.ESCAPE) {
             throw "Terminate.";
         }
@@ -826,5 +828,6 @@ class PlayState extends FlxState {
             // 自爆
             _player.damage(99999);
         }
+    #end
     }
 }

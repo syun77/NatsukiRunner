@@ -106,6 +106,14 @@ class Player extends FlxSprite {
         var dy = p.y - (y + height/2);
         dx *= MOVE_DECAY * MOVE_REVISE;
         dy *= MOVE_DECAY * MOVE_REVISE;
+#elseif FLASH
+        // マウスの座標に向かって移動する
+        var p = FlxG.mouse.getWorldPosition();
+
+        var dx = p.x - (x + width/2);
+        var dy = p.y - (y + height/2);
+        dx *= MOVE_DECAY * MOVE_REVISE;
+        dy *= MOVE_DECAY * MOVE_REVISE;
 #else
         var dx:Float = 0;
         var dy:Float = 0;
