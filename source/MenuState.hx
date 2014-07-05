@@ -122,13 +122,32 @@ class MenuState extends FlxState {
                 _timer++;
                 _txtPress.visible = _timer%64 < 48;
                 if(FlxG.mouse.justReleased) {
+
+                    if(Reg.getLevelMax() == 0) {
+                        // ステージ1のみの場合は、ステージ選択なしで開始
+                        _state = State.Decide;
+                        FlxG.sound.play("push");
+                        return;
+                    }
+
+                    // ステージ選択へ
                     _txtPress.text = "Please select level.";
                     FlxTween.tween(_txtPress, {y:FlxG.height/2}, 1, {ease:FlxEase.expoOut});
+                    var i = 0;
                     for(btn in _btnList) {
-                        btn.visible = true;
+                        if(i <= Reg.getLevelMax()) {
+                            // クリアしたステージ+1のみ選択可能
+                            btn.visible = true;
+                        }
+                        i++;
                     }
+                    i = 0;
                     for(txt in _texts) {
-                        txt.visible = true;
+                        if(i <= Reg.getLevelMax()) {
+                            // クリアしたステージ+1のみ選択可能
+                            txt.visible = true;
+                        }
+                        i++;
                     }
                     _state = State.Select;
                 }
