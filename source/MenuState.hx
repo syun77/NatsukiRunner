@@ -102,6 +102,9 @@ class MenuState extends FlxState {
             this.add(txt);
             _texts.push(txt);
         }
+
+        // タイトル画面BGM再生
+        Reg.playMusic("title");
     }
 
     /**
@@ -158,11 +161,23 @@ class MenuState extends FlxState {
                 _txtPress.visible = _timer%64 < 48;
                 if(_bDecide) {
                     _state = State.Decide;
+                    _timer = 0;
                     FlxG.sound.play("push");
+                    FlxG.sound.music.stop();
+                    var i = 0;
+                    for(btn in _btnList) {
+                        if(i + 1 != Reg.level) {
+                            btn.visible = false;
+                        }
+                        i++;
+                    }
                 }
 
             case State.Decide:
-                FlxG.switchState(new PlayState());
+                _timer++;
+                if(_timer > 30) {
+                    FlxG.switchState(new PlayState());
+                }
         }
 
 //        if(FlxG.keys.justPressed.R) {

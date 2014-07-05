@@ -38,9 +38,10 @@
 	<classpath name="source" />
 	<assets path="assets" />
     <assets path="assets/music" if="flash" exclude="ogg">
-        <sound path="trance003.mp3" id="001" />
+        <sound path="title.mp3" id="title" />
+        <sound path="trance001.mp3" id="001" />
         <sound path="trance002.mp3" id="002" />
-        <sound path="trance002.mp3" id="003" />
+        <sound path="trance003.mp3" id="003" />
         <sound path="gameover.mp3" id="gameover" />
     </assets>
     <assets path="assets/sounds" if="flash" exclude="ogg">
@@ -57,9 +58,10 @@
     </assets>
 
     <assets path="assets/music" unless="flash">
-        <sound path="trance003.ogg" id="001" />
+        <sound path="title.ogg" id="title" />
+        <sound path="trance001.ogg" id="001" />
         <sound path="trance002.ogg" id="002" />
-        <sound path="trance002.ogg" id="003" />
+        <sound path="trance003.ogg" id="003" />
         <sound path="gameover.ogg" id="gameover" />
     </assets>
     <assets path="assets/sounds" unless="flash">
