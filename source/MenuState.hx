@@ -163,7 +163,9 @@ class MenuState extends FlxState {
                     _state = State.Decide;
                     _timer = 0;
                     FlxG.sound.play("push");
-                    FlxG.sound.music.stop();
+                    if(FlxG.sound.music != null) {
+                        FlxG.sound.music.stop();
+                    }
                     var i = 0;
                     for(btn in _btnList) {
                         if(i + 1 != Reg.level) {

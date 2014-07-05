@@ -30,7 +30,7 @@ class LogoState extends FlxState {
         _glitch.delay = 0.01;
         add(_glitch);
 
-        FlxTween.tween(_glitch, {strength:0}, 2, {ease:FlxEase.bounceOut, complete:_cbEnd});
+        FlxTween.tween(_glitch, {strength:0}, 1.5, {ease:FlxEase.bounceOut, complete:_cbEnd});
         FlxTween.tween(_glitch, {alpha:1}, 1, {ease:FlxEase.expoOut});
     }
     /**
