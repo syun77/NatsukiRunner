@@ -20,7 +20,7 @@ class Reg {
     private static var _bBgmDisable = false;
 
     // レベル
-	public static var level:Int = 3;
+	public static var level:Int = 1;
     // スコア
 	public static var score:Int = 0;
 
@@ -34,7 +34,7 @@ class Reg {
         }
         if(_save.data == null || _save.data.scores == null || _save.data.levelMax == null) {
             // データがなければ初期化
-            clear();
+            clear(_save);
         }
 
         return _save;
@@ -43,8 +43,10 @@ class Reg {
     /**
      * セーブデータを初期化
      **/
-    public static function clear():Void {
-        var s = _getSave();
+    public static function clear(s:FlxSave=null):Void {
+        if(s == null) {
+            s = new FlxSave();
+        }
 
         s.data.scores = new Array<Int>();
         s.data.times = new Array<Int>();
@@ -205,6 +207,7 @@ class Reg {
     public static function cacheMusic():Void {
         FlxG.sound.volume = 1;
 
+        FlxG.sound.cache("title");
         FlxG.sound.cache("001");
         FlxG.sound.cache("002");
         FlxG.sound.cache("003");
