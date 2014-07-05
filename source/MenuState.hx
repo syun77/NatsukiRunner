@@ -1,5 +1,7 @@
 package;
 
+import flixel.addons.effects.FlxTrail;
+import flixel.FlxSprite;
 import flixel.util.FlxStringUtil;
 import flixel.util.FlxColor;
 import flixel.tweens.FlxEase;
@@ -26,6 +28,7 @@ class MenuState extends FlxState {
     private var _btnList:Array<FlxButton>;
 
     private var _texts:Array<FlxText>;
+    private var _natsuki:FlxSprite;
 
     /**
 	 * 生成
@@ -33,11 +36,18 @@ class MenuState extends FlxState {
     override public function create():Void {
         super.create();
 
+        _natsuki = new FlxSprite(FlxG.width, 0);
+        _natsuki.loadGraphic("assets/images/natsuki01.png");
+        this.add(_natsuki);
+        this.add(new FlxTrail(_natsuki));
+        FlxTween.tween(_natsuki, {x:0}, 1, {ease:FlxEase.expoOut});
+
         // テキスト
         var _txtTitle = new FlxText(0, 64, FlxG.width);
         _txtTitle.size = 24;
         _txtTitle.alignment = "center";
         _txtTitle.text = "Natsuki Boost3";
+        _txtTitle.borderStyle = FlxText.BORDER_OUTLINE_FAST;
         _txtPress = new FlxText(0, FlxG.height/2+36, FlxG.width);
         _txtPress.size = 16;
         _txtPress.alignment = "center";
@@ -92,8 +102,6 @@ class MenuState extends FlxState {
             this.add(txt);
             _texts.push(txt);
         }
-
-        trace("levelmax = " + Reg.getLevelMax());
     }
 
     /**

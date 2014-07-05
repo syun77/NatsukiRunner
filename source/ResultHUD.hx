@@ -30,6 +30,7 @@ class ResultHUD extends FlxGroup {
     private var _txtTotal:FlxText;
     private var _txtRank:FlxText;
     private var _txtRank2:FlxText;
+    private var _natsuki:FlxSprite;
 
     private var _objs:Array<FlxObject>;
 
@@ -122,6 +123,17 @@ class ResultHUD extends FlxGroup {
         // ■描画情報設定
         super();
         _objs = new Array<FlxObject>();
+
+        // 菜月さん
+        if(hp > 0) {
+            _natsuki = new FlxSprite(0, 0);
+            _natsuki.loadGraphic("assets/images/natsuki02.png");
+            _natsuki.x = -(_natsuki.width - FlxG.width)/2;
+            _natsuki.scale.set(2, 2);
+            _natsuki.alpha = 1;
+            _objs.push(_natsuki);
+            FlxTween.tween(_natsuki.scale, {x:1, y:1}, 2, {ease:FlxEase.expoOut});
+        }
 
         // 背景
         _back = new FlxSprite();
