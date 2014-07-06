@@ -129,6 +129,7 @@ class MenuState extends FlxState {
                     if(Reg.getLevelMax() == 0) {
                         // ステージ1のみの場合は、ステージ選択なしで開始
                         _state = State.Decide;
+                        _timer = 0;
                         FlxG.sound.play("push");
                         if(FlxG.sound.music != null) {
                             FlxG.sound.music.stop();
