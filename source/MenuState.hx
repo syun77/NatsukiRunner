@@ -51,7 +51,11 @@ class MenuState extends FlxState {
         _txtPress = new FlxText(0, FlxG.height/2+36, FlxG.width);
         _txtPress.size = 16;
         _txtPress.alignment = "center";
+#if MOBILE
+        _txtPress.text = "tap to start";
+#else
         _txtPress.text = "click to start";
+#end
         var _txtCopy = new FlxText(0, FlxG.height-16, FlxG.width);
         _txtCopy.text = "(c)2014 Alpha Secret Base / 2dgames.jp";
         _txtCopy.alignment = "center";
